@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Sidebar.ViewModels"
+             xmlns:evt="using:ZeroFall.Platform.Events"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="600"
+             x:Class="ZeroFall.Sidebar.Views.SidebarView"
+             x:DataType="vm:SidebarViewModel">
+
+    <Grid RowDefinitions="*">
+        <Grid Grid.Row="0">
+            <TreeView x:Name="SidebarTree"
+                      ItemsSource="{Binding RootChildren}"
+                      SelectedItem="{Binding SelectedTreeNode}"
+                      SelectionChanged="OnTreeSelectionChanged"
+                      DragDrop.AllowDrop="True">
+                <TreeView.Styles>
+                    <Style Selector="TreeViewItem.drag-over">
+                        <Setter Property="Background" Value="{DynamicResource SemiColorFill0}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource SemiColorPrimary}"/>
+                        <Setter Property="BorderThickness" Value="2"/>
+                    </Style>
+                </TreeView.Styles>
+                <TreeView.DataTemplates>
+                    <TreeDataTemplate DataType="evt:TreeNodeViewModel" ItemsSource="{Binding Children}">
+                        <StackPanel Orientation="Horizontal" Spacing="6"
+                                    x:DataType="evt:TreeNodeViewModel"
+                                    x:CompileBindings="False">
+                            <PathIcon Width="16" Height="16">
+                                <PathIcon.Data>
+                                    <MultiBinding Converter="{StaticResource TreeNodeIconConverter}">
+                                        <Binding Path="NodeType"/>
+                                        <Binding Path="DataSourceType"/>
+                                    </MultiBinding>
+                                </PathIcon.Data>
+                            </PathIcon>
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </TreeDataTemplate>
+                </TreeView.DataTemplates>
+            </TreeView>
+
+            <Border x:Name="DragGhost"
+                    IsVisible="False"
+                    Background="{DynamicResource SemiColorFill0}"
+                    BorderBrush="{DynamicResource SemiColorPrimary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="8,4"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    IsHitTestVisible="False">
+                <TextBlock x:Name="DragGhostText"
+                           FontSize="13"
+                           Foreground="{DynamicResource SemiColorText1}"/>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

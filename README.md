@@ -1,10 +1,12 @@
-# Datafinder
+# 烬 ZeroFall
 
-面向攻防与情报分析的 **Windows 桌面工作台**——**类 Burp Suite** 的 HTTP 流量截获、检视与重放，再叠加资产测绘、SQL 分析、AI 助手与交互式终端，统一在一个项目里完成。
+零溢出（Zero Overflow）出品的 Windows 桌面攻防工作台。
 
 采用 **Native AOT** 发布为单文件可执行程序：**冷启动快**、无需安装 .NET 运行时，双击即用。
 
-打开文件夹即项目；侦察结果、流量记录与终端记录落在项目本地数据库（`.datafinder.db`）中，便于用 SQL 与 AI 在同一工作区内分析。
+面向攻防与情报分析——**类 Burp Suite** 的 HTTP 流量截获、检视与重放，再叠加资产测绘、SQL 分析、AI 助手与交互式终端，统一在一个项目里完成。
+
+打开文件夹即项目；侦察结果、流量记录与终端记录落在项目本地数据库（`.zerofall.db`）中，便于用 SQL 与 AI 在同一工作区内分析。
 
 ---
 
@@ -20,7 +22,7 @@
 
 ---
 
-## 为什么用 Datafinder
+## 为什么用 烬
 
 - **类 Burp Suite**：内置浏览器 + 代理/拦截，HTTP(S) 流量全量入库；支持检视、重放、Intruder、Decoder/Diff 等 HTTP 工作流，网站树按会话组织请求。
 - **Native AOT**：预编译原生二进制，启动迅速，适合频繁开关、多项目切换的日常攻防作业。
@@ -53,7 +55,7 @@
 
 ## 安装与使用
 
-从本仓库 **Releases** 下载最新 `Datafinder-*-win-x64.zip`，解压到任意目录，运行其中的 **`Datafinder.App.exe`**（无需安装 .NET）。
+从本仓库 **Releases** 下载最新 `ZeroFall-*-win-x64.zip`，解压到任意目录，运行其中的 **`ZeroFall.App.exe`**（无需安装 .NET）。
 
 1. **打开文件夹** 选择工作目录  
 2. 在 **设置** 中按需配置 AI API、资产测绘 Key、代理等  

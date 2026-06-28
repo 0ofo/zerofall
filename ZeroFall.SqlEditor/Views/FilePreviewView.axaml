@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avaloniaEdit="using:AvaloniaEdit"
+             x:Class="ZeroFall.SqlEditor.Views.FilePreviewView">
+
+    <Grid>
+        <avaloniaEdit:TextEditor x:Name="TextEditor"
+                                 Margin="0"
+                                 Padding="4"
+                                 FontFamily="Consolas,Courier New,monospace"
+                                 FontSize="13"
+                                 Foreground="{DynamicResource SemiColorText0}"
+                                 Background="{DynamicResource SemiColorBackground0}"
+                                 ShowLineNumbers="True"
+                                 WordWrap="False"
+                                 IsReadOnly="True"/>
+        <ContentControl x:Name="TableContent"/>
+    </Grid>
+</UserControl>

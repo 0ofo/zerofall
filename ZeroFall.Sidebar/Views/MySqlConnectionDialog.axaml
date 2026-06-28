@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Sidebar.ViewModels"
+             x:Class="ZeroFall.Sidebar.Views.MySqlConnectionDialog"
+             x:DataType="vm:MySqlConnectionDialogViewModel"
+             Width="400">
+    <u:Form LabelPosition="Left"
+            LabelWidth="72"
+            LabelAlignment="Right"
+            HorizontalAlignment="Stretch">
+        <TextBox Classes="Small"
+                 HorizontalAlignment="Stretch"
+                 u:FormItem.Label="连接名称"
+                 Text="{Binding Name, Mode=TwoWay}"/>
+        <TextBox Classes="Small"
+                 HorizontalAlignment="Stretch"
+                 u:FormItem.Label="主机"
+                 Text="{Binding Host, Mode=TwoWay}"/>
+        <TextBox Classes="Small"
+                 HorizontalAlignment="Stretch"
+                 u:FormItem.Label="端口"
+                 Text="{Binding Port, Mode=TwoWay}"/>
+        <TextBox Classes="Small"
+                 HorizontalAlignment="Stretch"
+                 u:FormItem.Label="数据库"
+                 PlaceholderText="可选，留空列出全部库表"
+                 Text="{Binding Database, Mode=TwoWay}"/>
+        <TextBox Classes="Small"
+                 HorizontalAlignment="Stretch"
+                 u:FormItem.Label="用户名"
+                 Text="{Binding User, Mode=TwoWay}"/>
+        <TextBox Classes="Small"
+                 HorizontalAlignment="Stretch"
+                 u:FormItem.Label="密码"
+                 PasswordChar="●"
+                 Text="{Binding Password, Mode=TwoWay}"/>
+    </u:Form>
+</UserControl>

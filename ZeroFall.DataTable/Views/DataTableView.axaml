@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.DataTable.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="ZeroFall.DataTable.Views.DataTableView"
+             x:DataType="vm:DataTableViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Padding="0">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="GeometryDataTemplate" DataType="Geometry">
+            <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding}"/>
+        </DataTemplate>
+
+        <ControlTheme x:Key="IconBorderlessButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,*"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        <Border Grid.Row="0" Padding="12,0" IsVisible="{Binding ShowHeaderPanel}">
+            <StackPanel Orientation="Horizontal" Spacing="16">
+                <TextBlock Text="{Binding Title}"
+                           FontSize="{DynamicResource SemiFontSizeSmall}"
+                           FontWeight="SemiBold"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Subtitle}"
+                           FontSize="{DynamicResource SemiFontSizeSmall}"
+                           Opacity="0.7"
+                           VerticalAlignment="Center"/>
+                <Border Background="#FFA500" CornerRadius="4" Padding="6,2"
+                        IsVisible="{Binding IsDirty}">
+                    <TextBlock Text="未保存" FontSize="11" Foreground="White" VerticalAlignment="Center"/>
+                </Border>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <DataGrid x:CompileBindings="False"
+                      x:Name="TabDataGrid"
+                      ItemsSource="{Binding Rows}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Padding="0"
+                      MinHeight="{DynamicResource ZeroFallDataGridRowHeight}"
+                      FontSize="{DynamicResource SemiFontSizeRegular}"
+                      RowHeight="{DynamicResource ZeroFallDataGridRowHeight}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserSortColumns="True"
+                      CanUserReorderColumns="True"
+                      CanUserResizeColumns="True"
+                      SelectionMode="Extended"
+                      GridLinesVisibility="Horizontal"
+                      HorizontalGridLinesBrush="{DynamicResource SemiColorBorder}"
+                      SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                      Loaded="OnDataGridLoaded"
+                      CellEditEnded="OnDataGridCellEditEnded"
+                      CellPointerPressed="OnDataGridCellPointerPressed">
+                <DataGrid.Styles>
+                    <Style Selector="DataGridRow:nth-child(2n+1)">
+                        <Setter Property="Background" Value="{DynamicResource SemiColorFill0}"/>
+                    </Style>
+                    <!-- 单元格垂直居中与 padding 见 App DataGridCellLayout.axaml -->
+                    <Style Selector="DataGridRowHeader">
+                        <Setter Property="Padding" Value="0"/>
+                    </Style>
+                    <Style Selector="DataGrid ScrollViewer">
+                        <Setter Property="AllowAutoHide" Value="False"/>
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+                        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
+                    </Style>
+                    <!-- 细滚动条由模板内 ScrollBar.AllowAutoHide 控制，单靠 Selector 难以覆盖 Semi；见 DataGridScrollChrome.Apply -->
+                </DataGrid.Styles>
+            </DataGrid>
+            <Border Background="{DynamicResource SemiColorFill0}"
+                    Opacity="0.55"
+                    IsVisible="{Binding IsLoading}"
+                    IsHitTestVisible="False">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            Spacing="8">
+                    <ProgressBar IsIndeterminate="True"
+                                 Width="120"
+                                 Height="4"
+                                 HorizontalAlignment="Center"/>
+                    <TextBlock Text="加载中…"
+                               HorizontalAlignment="Center"
+                               FontSize="{DynamicResource SemiFontSizeSmall}"
+                               Foreground="{DynamicResource SemiColorText1}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

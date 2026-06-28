@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.DataTable.ViewModels"
+             x:Class="ZeroFall.DataTable.Views.DataTablePagerView"
+             x:DataType="vm:DataTableViewModel"
+             x:CompileBindings="False"
+             Padding="0">
+    <UserControl.Resources>
+        <DataTemplate x:Key="GeometryDataTemplate" DataType="Geometry">
+            <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding}"/>
+        </DataTemplate>
+        <ControlTheme x:Key="IconBorderlessButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Button Content="{DynamicResource SemiIconArrowLeft}"
+                Theme="{DynamicResource IconBorderlessButton}"
+                Command="{Binding PreviousPageCommand}"/>
+        <TextBlock VerticalAlignment="Center"
+                   FontSize="{DynamicResource SemiFontSizeRegular}">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}{0} / {1}">
+                    <Binding Path="CurrentPage"/>
+                    <Binding Path="TotalPages"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Button Content="{DynamicResource SemiIconArrowRight}"
+                Theme="{DynamicResource IconBorderlessButton}"
+                Command="{Binding NextPageCommand}"/>
+        <Button Content="{DynamicResource SemiIconRefresh}"
+                Theme="{DynamicResource IconBorderlessButton}"
+                Command="{Binding RefreshLocalDataCommand}"
+                IsEnabled="{Binding !IsLoading}"
+                IsVisible="{Binding CanRefreshLocalData}"
+                ToolTip.Tip="刷新"/>
+        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center"
+                    IsVisible="{Binding IsLoading}">
+            <ProgressBar IsIndeterminate="True"
+                         Width="56"
+                         Height="3"
+                         VerticalAlignment="Center"/>
+            <TextBlock Text="加载中…"
+                       VerticalAlignment="Center"
+                       Opacity="0.75"
+                       FontSize="{DynamicResource SemiFontSizeRegular}"/>
+        </StackPanel>
+        <TextBlock VerticalAlignment="Center" Opacity="0.65"
+                   FontSize="{DynamicResource SemiFontSizeRegular}">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{}共 {0:N0} 行">
+                    <Binding Path="TotalRows"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Border Width="1" Height="16" Margin="8,0" VerticalAlignment="Center"
+                Background="{DynamicResource SemiColorBorder}"/>
+        <ComboBox Width="100"
+                  Classes="Small"
+                  VerticalAlignment="Center"
+                  SelectedIndex="{Binding ExportScopeIndex, Mode=TwoWay}">
+            <ComboBoxItem Content="当前页"/>
+            <ComboBoxItem Content="全部页" IsEnabled="{Binding SupportsAllPageExport}"/>
+        </ComboBox>
+        <Button Content="导出 CSV"
+                Classes="Small"
+                VerticalAlignment="Center"
+                Command="{Binding ExportCsvCommand}"/>
+    </StackPanel>
+</UserControl>
