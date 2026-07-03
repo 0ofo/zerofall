@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.AssetRecon.ViewModels"
+             x:Class="ZeroFall.AssetRecon.Views.AssetReconDetailPanelView"
+             x:DataType="vm:AssetReconLeftPanelViewModel"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
+             ClipToBounds="True">
+
+    <UserControl.Resources>
+        <x:Double x:Key="AssetReconDetailFontSize">10</x:Double>
+        <x:Double x:Key="AssetReconDetailLineHeight">15</x:Double>
+        <!-- 覆盖 Ursa Descriptions 主题行距，仅作用于本面板 -->
+        <Thickness x:Key="DescriptionsItemMargin">0,0,0,1</Thickness>
+        <Thickness x:Key="DescriptionsKeyPadding">0,0,2,0</Thickness>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="u|Descriptions TextBlock">
+            <Setter Property="FontSize" Value="{StaticResource AssetReconDetailFontSize}"/>
+            <Setter Property="LineHeight" Value="{StaticResource AssetReconDetailLineHeight}"/>
+        </Style>
+        <Style Selector="u|Descriptions Label">
+            <Setter Property="FontSize" Value="{StaticResource AssetReconDetailFontSize}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+        <Style Selector="u|Descriptions AccessText">
+            <Setter Property="FontSize" Value="{StaticResource AssetReconDetailFontSize}"/>
+        </Style>
+        <Style Selector="u|DescriptionsItem">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style Selector="u|DescriptionsItem /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer x:Name="DetailScroll"
+                  HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto"
+                  Padding="4,6,4,6"
+                  Margin="{DynamicResource SemiThicknessNone}"
+                  ClipToBounds="True">
+        <u:Descriptions x:Name="DetailDescriptions"
+                        Margin="0"
+                        Padding="0"
+                        HorizontalAlignment="Stretch"
+                        ItemsSource="{Binding DetailProperties}"
+                        Orientation="Vertical"
+                        LabelPosition="Left"
+                        ItemAlignment="Center"
+                        LabelMemberBinding="{Binding Label}"
+                        DisplayMemberBinding="{Binding Value}"/>
+    </ScrollViewer>
+</UserControl>

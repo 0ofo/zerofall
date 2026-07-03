@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.Settings.TerminalSettingsView"
+             x:DataType="vm:TerminalSettingsViewModel">
+
+    <ScrollViewer>
+        <u:Form Margin="20"
+                LabelPosition="Left"
+                LabelWidth="120"
+                LabelAlignment="Right"
+                HorizontalAlignment="Stretch">
+            <Grid ColumnDefinitions="*,Auto" u:FormItem.Label="默认 Shell 路径">
+                <TextBox Grid.Column="0"
+                         Text="{Binding ShellPath}"
+                         PlaceholderText="自动检测"/>
+                <Button Grid.Column="1"
+                        Content="浏览..."
+                        Margin="8,0,0,0"/>
+            </Grid>
+            <TextBox Text="{Binding FontFamily}"
+                     HorizontalAlignment="Stretch"
+                     u:FormItem.Label="字体"/>
+            <NumericUpDown Value="{Binding FontSize}"
+                           Minimum="8"
+                           Maximum="32"
+                           Width="120"
+                           HorizontalAlignment="Left"
+                           u:FormItem.Label="字体大小"/>
+        </u:Form>
+    </ScrollViewer>
+</UserControl>

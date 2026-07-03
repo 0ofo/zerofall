@@ -1,0 +1,352 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="using:ZeroFall.AiPanel.Models"
+             xmlns:views="using:ZeroFall.AiPanel.Views"
+             xmlns:conv="using:ZeroFall.AiPanel.Converters"
+             x:Class="ZeroFall.AiPanel.Views.ChatRoundControl"
+             x:Name="ChatRoundRoot"
+             x:DataType="models:ChatRoundBlock"
+             HorizontalAlignment="Stretch"
+             HorizontalContentAlignment="Stretch"
+             VerticalAlignment="Top">
+
+    <!-- LiveMarkdown 字号（默认 FontSizeM=14，聊天区整体小一号） -->
+    <UserControl.Resources>
+        <x:Double x:Key="FontSizeM">12</x:Double>
+        <x:Double x:Key="FontSizeL">13</x:Double>
+        <x:Double x:Key="FontSizeXl">14</x:Double>
+        <x:Double x:Key="FontSize2Xl">15</x:Double>
+        <x:Double x:Key="FontSize3Xl">16</x:Double>
+        <DataTemplate x:Key="ToolCallHeaderTemplate"
+                      x:DataType="models:ChatMessage">
+            <Grid ColumnDefinitions="*,Auto"
+                  VerticalAlignment="Center">
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            Spacing="6"
+                            VerticalAlignment="Center">
+                    <PathIcon Data="{DynamicResource SemiIconLoading}"
+                              Classes="tool-status-loading"
+                              Width="12"
+                              Height="12"
+                              Foreground="{DynamicResource SemiColorPrimary}"
+                              IsVisible="{Binding ToolStatusLoading}"
+                              x:CompileBindings="False"/>
+                    <PathIcon Data="{DynamicResource SemiIconStoryStroked}"
+                              Width="12"
+                              Height="12"
+                              Foreground="{DynamicResource SemiColorSuccess}"
+                              IsVisible="{Binding ToolStatusSuccess}"
+                              x:CompileBindings="False"/>
+                    <PathIcon Data="{DynamicResource SemiIconCrossCircleStroked}"
+                              Width="12"
+                              Height="12"
+                              Foreground="{DynamicResource SemiColorDanger}"
+                              IsVisible="{Binding ToolStatusFailed}"
+                              x:CompileBindings="False"/>
+                    <TextBlock Text="{Binding ToolCallHeaderText}"
+                               FontSize="12"
+                               LineHeight="16"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SemiColorText1}"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+                <PathIcon Grid.Column="1"
+                          Classes="chat-card-chevron"
+                          Data="{DynamicResource SemiIconChevronRightStroked}"
+                          Width="12"
+                          Height="12"
+                          Margin="4,0,0,0"
+                          VerticalAlignment="Center"
+                          Foreground="{DynamicResource SemiColorText2}"
+                          RenderTransformOrigin="50%,50%"
+                          x:CompileBindings="False">
+                    <PathIcon.RenderTransform>
+                        <RotateTransform Angle="{Binding IsToolExpanded, Converter={x:Static conv:BoolToChevronRotationConverter.Instance}}"/>
+                    </PathIcon.RenderTransform>
+                    <PathIcon.Transitions>
+                        <Transitions>
+                            <TransformOperationsTransition Property="RenderTransform"
+                                                           Duration="0:0:0.22"/>
+                        </Transitions>
+                    </PathIcon.Transitions>
+                </PathIcon>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ReasoningHeaderTemplate"
+                      x:DataType="models:ChatMessage">
+            <Grid ColumnDefinitions="*,Auto"
+                  VerticalAlignment="Center">
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            Spacing="6"
+                            VerticalAlignment="Center">
+                    <PathIcon Data="{DynamicResource SemiIconLoading}"
+                              Classes="tool-status-loading"
+                              Width="12"
+                              Height="12"
+                              Foreground="{DynamicResource SemiColorPrimary}"
+                              IsVisible="{Binding IsThinking}"
+                              x:CompileBindings="False"/>
+                    <PathIcon Data="{DynamicResource SemiIconBulb}"
+                              Width="12"
+                              Height="12"
+                              Foreground="{DynamicResource SemiColorWarning}"
+                              IsVisible="{Binding ShowThinkingBulb}"
+                              x:CompileBindings="False"/>
+                    <TextBlock Text="思考"
+                               FontSize="12"
+                               LineHeight="16"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource SemiColorText1}"
+                               TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+                <PathIcon Grid.Column="1"
+                          Classes="chat-card-chevron"
+                          Data="{DynamicResource SemiIconChevronRightStroked}"
+                          Width="12"
+                          Height="12"
+                          Margin="4,0,0,0"
+                          VerticalAlignment="Center"
+                          Foreground="{DynamicResource SemiColorText2}"
+                          RenderTransformOrigin="50%,50%"
+                          x:CompileBindings="False">
+                    <PathIcon.RenderTransform>
+                        <RotateTransform Angle="{Binding IsReasoningExpanded, Converter={x:Static conv:BoolToChevronRotationConverter.Instance}}"/>
+                    </PathIcon.RenderTransform>
+                    <PathIcon.Transitions>
+                        <Transitions>
+                            <TransformOperationsTransition Property="RenderTransform"
+                                                           Duration="0:0:0.22"/>
+                        </Transitions>
+                    </PathIcon.Transitions>
+                </PathIcon>
+            </Grid>
+        </DataTemplate>
+        <CrossFade x:Key="ChatCardContentTransition"
+                   Duration="0:0:0.15"/>
+        <ControlTheme x:Key="ChatCardExpanderHeaderToggleTheme" TargetType="ToggleButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <ControlTemplate TargetType="ToggleButton">
+                    <ContentPresenter Background="{TemplateBinding Background}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover:not(:checked)">
+                <Setter Property="Background" Value="{DynamicResource SemiColorFill1}"/>
+            </Style>
+            <Style Selector="^:checked">
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            <Style Selector="^:checked:pointerover">
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="Transparent"/>
+            </Style>
+        </ControlTheme>
+        <!-- Semi 根模板是 DockPanel，Expander 上的 Border/CornerRadius 不会绘制；卡片圆角靠外层 Border -->
+        <ControlTheme x:Key="ChatCardExpanderTheme" TargetType="Expander">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Expander">
+                    <DockPanel LastChildFill="False">
+                        <ToggleButton x:Name="ExpanderHeader"
+                                      DockPanel.Dock="Top"
+                                      Theme="{StaticResource ChatCardExpanderHeaderToggleTheme}"
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      Padding="8,5,6,5"
+                                      MinHeight="22"
+                                      HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch"
+                                      VerticalContentAlignment="Center"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}"
+                                      IsEnabled="{TemplateBinding IsEnabled}"/>
+                        <Border x:Name="ExpanderContent"
+                                DockPanel.Dock="Top"
+                                MinHeight="0"
+                                Background="Transparent"
+                                BorderBrush="{DynamicResource SemiColorBorder}"
+                                BorderThickness="0,1,0,0"
+                                Padding="6,3,6,4"
+                                IsVisible="{TemplateBinding IsExpanded}">
+                            <ContentPresenter x:Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="Border.chat-card">
+            <Setter Property="BorderBrush" Value="{DynamicResource SemiColorBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Background" Value="{DynamicResource SemiColorFill0}"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="ClipToBounds" Value="True"/>
+        </Style>
+        <Style Selector="Border.chat-card > Expander">
+            <Setter Property="Theme" Value="{StaticResource ChatCardExpanderTheme}"/>
+            <Setter Property="ContentTransition" Value="{StaticResource ChatCardContentTransition}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <Style Selector="PathIcon.tool-status-loading">
+            <Setter Property="RenderTransform" Value="rotate(0)"/>
+            <Style.Animations>
+                <Animation Duration="0:0:0.8"
+                           IterationCount="Infinite">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="RotateTransform.Angle" Value="0"/>
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="RotateTransform.Angle" Value="360"/>
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+
+    <StackPanel Spacing="4"
+                Margin="0,0,0,6"
+                HorizontalAlignment="Stretch">
+        <DockPanel x:Name="UserRowPanel"
+                   HorizontalAlignment="Stretch"
+                   LastChildFill="False"
+                   IsVisible="{Binding UserMessage, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Border x:Name="UserBubbleBorder"
+                    DockPanel.Dock="Right"
+                    MinWidth="0"
+                    Background="{DynamicResource SemiColorPrimary}"
+                    CornerRadius="8"
+                    Padding="6,4"
+                    MinHeight="24">
+                <SelectableTextBlock x:Name="UserBubbleText"
+                                     Text="{Binding UserMessage.Content}"
+                                     FontSize="12"
+                                     LineHeight="16"
+                                     Foreground="White"
+                                     TextWrapping="Wrap"/>
+            </Border>
+            <Button DockPanel.Dock="Right"
+                    ToolTip.Tip="撤销此条及之后的对话"
+                    Classes="Small"
+                    VerticalAlignment="Center"
+                    Margin="0,0,4,0"
+                    Padding="2"
+                    Width="22"
+                    Height="22"
+                    Foreground="{DynamicResource SemiColorText2}"
+                    Background="{DynamicResource SemiColorFill0}"
+                    BorderBrush="{DynamicResource SemiColorBorder}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    IsVisible="{Binding PanelViewModel.CanRevertMessages, ElementName=ChatRoundRoot}"
+                    Click="OnRevertUserMessageClick">
+                <PathIcon Data="{DynamicResource SemiIconRedo}"
+                          Width="12"
+                          Height="12"/>
+            </Button>
+        </DockPanel>
+
+        <ItemsControl ItemsSource="{Binding Following}"
+                      HorizontalAlignment="Stretch">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Spacing="4"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="models:ChatMessage">
+                    <StackPanel Spacing="4"
+                                HorizontalAlignment="Stretch">
+
+                        <Border Classes="chat-card"
+                                IsVisible="{Binding HasToolCall}">
+                            <Expander Header="{Binding}"
+                                      HeaderTemplate="{StaticResource ToolCallHeaderTemplate}"
+                                      IsExpanded="{Binding IsToolExpanded, Mode=TwoWay}"
+                                      Expanding="OnChatCardExpanderExpanding"
+                                      Collapsing="OnChatCardExpanderCollapsing"
+                                      x:CompileBindings="False">
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="调用参数"
+                                               FontSize="10"
+                                               Foreground="{DynamicResource SemiColorText2}"
+                                               IsVisible="{Binding ToolArgumentsJson, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <SelectableTextBlock Text="{Binding ToolArgumentsDisplay}"
+                                                         FontFamily="{DynamicResource ZeroFallCjkMonoFontFamily}"
+                                                         FontSize="10"
+                                                         TextWrapping="Wrap"
+                                                         IsVisible="{Binding ToolArgumentsJson, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <TextBlock Text="返回结果"
+                                               FontSize="10"
+                                               Margin="0,2,0,0"
+                                               Foreground="{DynamicResource SemiColorText2}"
+                                               IsVisible="{Binding ToolOutput, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <SelectableTextBlock Text="{Binding ToolOutputDisplay}"
+                                                         FontFamily="{DynamicResource ZeroFallCjkMonoFontFamily}"
+                                                         FontSize="10"
+                                                         TextWrapping="Wrap"
+                                                         IsVisible="{Binding ToolOutput, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                    <TextBlock Text="正在执行…"
+                                               FontSize="10"
+                                               IsVisible="{Binding IsToolRunning}"
+                                               Foreground="{DynamicResource SemiColorPrimary}"/>
+                                </StackPanel>
+                            </Expander>
+                        </Border>
+
+                        <Border Classes="chat-card"
+                                IsVisible="{Binding ShowReasoningSection}">
+                            <Expander Header="{Binding}"
+                                      HeaderTemplate="{StaticResource ReasoningHeaderTemplate}"
+                                      IsExpanded="{Binding IsReasoningExpanded, Mode=TwoWay}"
+                                      Expanding="OnChatCardExpanderExpanding"
+                                      Collapsing="OnChatCardExpanderCollapsing"
+                                      x:CompileBindings="False">
+                                <SelectableTextBlock Text="{Binding ReasoningContent}"
+                                                     FontSize="12"
+                                                     LineHeight="16"
+                                                     TextWrapping="Wrap"
+                                                     Foreground="{DynamicResource SemiColorText2}"
+                                                     x:CompileBindings="False"/>
+                            </Expander>
+                        </Border>
+
+                        <views:LazyMarkdownPresenter IsVisible="{Binding ShowAssistantMarkdown}"
+                                                     MarkdownBuilder="{Binding ContentBuilder}"
+                                                     HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

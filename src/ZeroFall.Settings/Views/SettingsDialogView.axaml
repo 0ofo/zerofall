@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.SettingsDialogView"
+             x:DataType="vm:SettingsWindowViewModel"
+             Width="700"
+             Height="500"
+             MinWidth="500"
+             MinHeight="350">
+
+    <Grid RowDefinitions="*,Auto">
+        <TabbedPage Grid.Row="0"
+                    x:Name="SettingsTabs"
+                    TabPlacement="Left"/>
+
+        <Border Grid.Row="1"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="0,1,0,0"
+                Padding="16,8"
+                IsVisible="{Binding FooterStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Text="{Binding FooterStatus}"
+                       TextWrapping="Wrap"
+                       FontSize="12"
+                       Foreground="{DynamicResource SemiColorText2}"/>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,179 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.Settings.ProxySettingsView"
+             x:DataType="vm:ProxySettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16">
+            <u:UrsaGroupBox Header="HTTP 拦截代理（Fluxzy / Burp 风格）">
+                <StackPanel Spacing="12">
+                    <TextBlock TextWrapping="Wrap"
+                               Opacity="0.75"
+                               FontSize="12"
+                               Text="开启后在本机监听 HTTP(S) 代理，外部应用将流量指向该地址即可捕获；记录写入「网络监控」表，来源标记为 Proxy。HTTPS 解密需安装并信任导出的根证书。"/>
+                    <u:Form LabelPosition="Left"
+                            LabelWidth="140"
+                            LabelAlignment="Right"
+                            HorizontalAlignment="Stretch">
+                        <CheckBox IsChecked="{Binding ListenerEnabled}"
+                                  u:FormItem.Label="启用本地监听"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8"
+                                    u:FormItem.Label="监听地址">
+                            <ComboBox ItemsSource="{Binding ListenAddressOptions}"
+                                      SelectedItem="{Binding ProxyGatewayHost}"
+                                      Width="220"
+                                      PlaceholderText="监听地址"/>
+                            <NumericUpDown Value="{Binding ProxyGatewayPort}"
+                                           Minimum="1"
+                                           Maximum="65535"
+                                           Width="120"/>
+                        </StackPanel>
+                        <TextBlock Opacity="0.75"
+                                   FontSize="12"
+                                   TextWrapping="Wrap"
+                                   Text="127.0.0.1=仅本机；0.0.0.0=所有网卡；其余为当前机器可用 IPv4 地址。"
+                                   u:FormItem.Label=" "/>
+                        <CheckBox IsChecked="{Binding HttpsInterceptionEnabled}"
+                                  u:FormItem.Label="HTTPS 解密"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8"
+                                    u:FormItem.Label="根证书">
+                            <Button Content="导出根证书 (PEM)"
+                                    Command="{Binding ExportProxyCertificateCommand}"
+                                    Classes="Small"/>
+                            <TextBlock VerticalAlignment="Center"
+                                       Opacity="0.75"
+                                       FontSize="12"
+                                       Text="{Binding ProxyRuntimeMessage}"/>
+                        </StackPanel>
+                    </u:Form>
+                </StackPanel>
+            </u:UrsaGroupBox>
+
+            <u:UrsaGroupBox Header="Match &amp; Replace（流量替换）">
+                <StackPanel Spacing="12">
+                    <TextBlock TextWrapping="Wrap"
+                               Opacity="0.75"
+                               FontSize="12"
+                               Text="按主机（支持 * 通配符）匹配后，对请求/响应正文执行文本或正则替换（全量替换所有匹配项）。保存后会重启本地拦截代理以应用规则。"/>
+                    <Grid ColumnDefinitions="220,*"
+                          RowDefinitions="Auto,*"
+                          MinHeight="240">
+                        <StackPanel Grid.Column="0"
+                                    Grid.RowSpan="2"
+                                    Spacing="8"
+                                    Margin="0,0,12,0">
+                            <TextBlock Text="规则列表"
+                                       FontWeight="SemiBold"/>
+                            <ListBox ItemsSource="{Binding ReplaceRules}"
+                                     SelectedItem="{Binding SelectedReplaceRule}"
+                                     MinHeight="160">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ProxyReplaceRuleViewModel"
+                                                  x:CompileBindings="False">
+                                        <TextBlock Text="{Binding ListTitle}"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="8">
+                                <Button Content="添加"
+                                        Command="{Binding AddReplaceRuleCommand}"
+                                        Classes="Small"/>
+                                <Button Content="删除"
+                                        Command="{Binding RemoveSelectedReplaceRuleCommand}"
+                                        Classes="Small"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <TextBlock Grid.Column="1"
+                                   Grid.Row="0"
+                                   Text="规则详情"
+                                   FontWeight="SemiBold"
+                                   Margin="0,0,0,8"/>
+
+                        <Border Grid.Column="1"
+                                Grid.Row="1"
+                                Padding="12"
+                                CornerRadius="4"
+                                BorderBrush="{DynamicResource SemiColorBorder}"
+                                BorderThickness="1"
+                                IsVisible="{Binding SelectedReplaceRule, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <u:Form LabelPosition="Left"
+                                    LabelWidth="120"
+                                    LabelAlignment="Right"
+                                    DataContext="{Binding SelectedReplaceRule}"
+                                    HorizontalAlignment="Stretch">
+                                <CheckBox IsChecked="{Binding Enabled}"
+                                          u:FormItem.Label="启用"/>
+                                <TextBox Text="{Binding Remark, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="备注名称"
+                                         HorizontalAlignment="Stretch"
+                                         u:FormItem.Label="备注"/>
+                                <TextBox Text="{Binding Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="*.example.com 或留空匹配全部"
+                                         HorizontalAlignment="Stretch"
+                                         u:FormItem.Label="Host"/>
+                                <TextBox Text="{Binding Match, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="要匹配的文本或正则"
+                                         HorizontalAlignment="Stretch"
+                                         u:FormItem.Label="匹配"/>
+                                <CheckBox IsChecked="{Binding IsRegex}"
+                                          Content="正则表达式"
+                                          u:FormItem.Label="匹配模式"/>
+                                <TextBox Text="{Binding Replacement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="替换为…"
+                                         AcceptsReturn="True"
+                                         MinHeight="64"
+                                         TextWrapping="Wrap"
+                                         HorizontalAlignment="Stretch"
+                                         u:FormItem.Label="替换文本"/>
+                            </u:Form>
+                        </Border>
+
+                        <TextBlock Grid.Column="1"
+                                   Grid.Row="1"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Opacity="0.6"
+                                   Text="请添加或选择一条替换规则"
+                                   IsVisible="{Binding SelectedReplaceRule, Converter={x:Static ObjectConverters.IsNull}}"/>
+                    </Grid>
+                </StackPanel>
+            </u:UrsaGroupBox>
+
+            <u:UrsaGroupBox Header="应用出站代理（浏览器 + 后台请求）">
+                <StackPanel Spacing="12">
+                    <u:Form LabelPosition="Left"
+                            LabelWidth="140"
+                            LabelAlignment="Right"
+                            HorizontalAlignment="Stretch">
+                        <ComboBox SelectedIndex="{Binding ProxyModeIndex}"
+                                  Width="220"
+                                  HorizontalAlignment="Left"
+                                  u:FormItem.Label="代理模式">
+                            <ComboBoxItem Content="直连（Direct）"/>
+                            <ComboBoxItem Content="系统代理（System）"/>
+                            <ComboBoxItem Content="固定代理（Fixed）"/>
+                            <ComboBoxItem Content="Fluxzy 网关（Gateway）"/>
+                        </ComboBox>
+                        <TextBox Text="{Binding UpstreamProxyUrl}"
+                                 PlaceholderText="http://127.0.0.1:7890"
+                                 MinWidth="360"
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="上游代理"/>
+                        <TextBlock TextWrapping="Wrap"
+                                   Opacity="0.75"
+                                   FontSize="12"
+                                   Text="上游代理示例：http://127.0.0.1:7890。选择 Fluxzy 网关时，应用请求走上方拦截代理；保存后会刷新代理状态并重建浏览器标签页。"
+                                   u:FormItem.Label=" "/>
+                    </u:Form>
+                </StackPanel>
+            </u:UrsaGroupBox>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

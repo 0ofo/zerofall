@@ -1,0 +1,28 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AssetRecon.ViewModels"
+             x:Class="ZeroFall.AssetRecon.Views.AssetReconResultsView"
+             x:Name="Root"
+             x:DataType="vm:AssetReconViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        <DataGrid x:Name="ResultsDiagGrid"
+                  x:CompileBindings="False"
+                  DataContext="{Binding ResultsTable}"
+                  ItemsSource="{Binding Rows}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  MinHeight="48"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  SelectionMode="Extended"
+                  GridLinesVisibility="Horizontal"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}"/>
+    </Grid>
+</UserControl>

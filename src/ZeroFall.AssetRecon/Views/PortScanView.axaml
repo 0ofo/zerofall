@@ -1,0 +1,83 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AssetRecon.ViewModels"
+             x:Class="ZeroFall.AssetRecon.Views.PortScanView"
+             x:DataType="vm:PortScanViewModel">
+
+    <Grid Margin="12" RowDefinitions="Auto,Auto,*">
+        <Border Grid.Row="0"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="12">
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="12">
+                <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="目标"/>
+                <TextBox Grid.Row="0" Grid.Column="1"
+                         Text="{Binding TargetHost}"
+                         PlaceholderText="主机名或 IP"
+                         IsEnabled="{Binding !IsScanning}"
+                         Classes="Small"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="端口范围"/>
+                <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <NumericUpDown Minimum="1" Maximum="65535" Value="{Binding PortStart}"
+                                   IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+                    <TextBlock VerticalAlignment="Center" Text="—"/>
+                    <NumericUpDown Minimum="1" Maximum="65535" Value="{Binding PortEnd}"
+                                   IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Text="并发"/>
+                <NumericUpDown Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="65536" Value="{Binding MaxConcurrency}"
+                               IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Text="连接超时(ms)"/>
+                <NumericUpDown Grid.Row="3" Grid.Column="1" Minimum="100" Maximum="60000" Value="{Binding ConnectTimeoutMs}"
+                               IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Text="Banner读取(ms)"/>
+                <NumericUpDown Grid.Row="4" Grid.Column="1" Minimum="50" Maximum="30000" Value="{Binding BannerReadMs}"
+                               IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Text="Banner最大字节"/>
+                <NumericUpDown Grid.Row="5" Grid.Column="1" Minimum="64" Maximum="16384" Value="{Binding BannerMaxBytes}"
+                               IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" Text="启用UDP"/>
+                <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                    <ToggleSwitch IsChecked="{Binding EnableUdp}" IsEnabled="{Binding !IsScanning}"/>
+                    <TextBlock VerticalAlignment="Center" Opacity="0.85" TextWrapping="Wrap"
+                               Text="按端口多探测包（见 UdpServiceProbes）；有 UDP 回包才入表。Goby 级指纹需自建响应匹配规则库。"/>
+                </StackPanel>
+
+                <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" Text="UDP等待(ms)"/>
+                <NumericUpDown Grid.Row="7" Grid.Column="1" Minimum="50" Maximum="60000" Value="{Binding UdpRecvWaitMs}"
+                               IsEnabled="{Binding !IsScanning}" Width="120" Classes="Small"/>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="8" Margin="0,12,0,8">
+            <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" Opacity="0.95"/>
+            <TextBlock Text="{Binding ProgressText}" FontFamily="Consolas,Courier New,monospace" FontSize="12"/>
+        </StackPanel>
+
+        <DataGrid x:Name="ScanResultsDataGrid"
+                  Grid.Row="2"
+                  ItemsSource="{Binding Results}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="False"
+                  CanUserResizeColumns="True"
+                  x:CompileBindings="False"
+                  Loaded="OnResultsGridLoaded">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="协议" Binding="{Binding Protocol}" Width="56"/>
+                <DataGridTextColumn Header="指纹/规则" Binding="{Binding Fingerprint}" Width="120"/>
+                <DataGridTextColumn Header="端口" Binding="{Binding Port}" Width="80"/>
+                <DataGridTextColumn Header="耗时(ms)" Binding="{Binding ConnectMs}" Width="90"/>
+                <DataGridTextColumn Header="Banner" Binding="{Binding Banner}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

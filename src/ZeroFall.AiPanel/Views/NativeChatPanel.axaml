@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AiPanel.ViewModels"
+             x:Class="ZeroFall.AiPanel.Views.NativeChatPanel"
+             x:DataType="vm:AiPanelViewModel">
+
+    <Grid RowDefinitions="*,Auto" Margin="8,4,18,8">
+        <ScrollViewer x:Name="ChatScroll"
+                      Grid.Row="0"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <TextBlock Text="{Binding TranscriptDisplayText}"
+                       TextWrapping="Wrap"
+                       FontFamily="Consolas,Courier New,monospace"
+                       FontSize="13"
+                       Foreground="{DynamicResource SemiColorText0}"/>
+        </ScrollViewer>
+
+        <Border Grid.Row="1"
+                IsVisible="{Binding IsWaitingForReply}"
+                Margin="0,8,0,0"
+                Padding="12,10"
+                CornerRadius="8"
+                Background="{DynamicResource SemiColorFill0}"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="1">
+            <TextBlock Text="等待回复…"
+                       Foreground="{DynamicResource SemiColorText2}"/>
+        </Border>
+    </Grid>
+</UserControl>

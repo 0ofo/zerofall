@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             xmlns:views="using:ZeroFall.Browser.Views"
+             xmlns:services="using:ZeroFall.Browser.Services"
+             x:Class="ZeroFall.Browser.Views.HttpReplayView"
+             x:DataType="vm:HttpReplayTabViewModel">
+    <Grid Margin="8">
+        <views:HttpMessagePairView
+                                   x:CompileBindings="False"
+                                   RequestIsReadOnly="False"
+                                   ShowResponseHeaderRightText="True"
+                                   RequestText="{Binding SelectedItem.RequestText, Mode=TwoWay}"
+                                   ResponseText="{Binding SelectedItem.ResponseText, Mode=OneWay}"
+                                   ReplayRealHost="{Binding SelectedItem.RealHost, Mode=TwoWay}"
+                                   ReplayIsHttps="{Binding SelectedItem.IsHttps, Mode=TwoWay}"
+                                   RequestEditorMenuScope="{x:Static services:HttpRequestEditorMenuScope.Replay}"
+                                   ResponseHeaderRightText="{Binding SelectedItem.ResponseLatencyText, Mode=OneWay}"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:md="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia">
+    <!-- LiveMarkdown 默认 Styles.axaml 在 UiFont 之后加载并写死 Arial/Consolas，此处再覆盖一次 -->
+    <Style Selector="md|MarkdownTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallUiFontFamily}"/>
+    </Style>
+    <Style Selector="md|CodeBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallCjkMonoFontFamily}"/>
+    </Style>
+    <Style Selector="md|MarkdownRenderer TextBlock.ListBlockNumber">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallUiFontFamily}"/>
+    </Style>
+    <Style Selector="md|MarkdownRenderer TextBlock.ListBlockBullet">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallUiFontFamily}"/>
+    </Style>
+    <Style Selector="md|MarkdownRenderer InlineUIContainer.Code md|MarkdownTextBlock">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallCjkMonoFontFamily}"/>
+    </Style>
+</Styles>

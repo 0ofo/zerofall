@@ -1,0 +1,41 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ZeroFall.Settings.ViewModels"
+        xmlns:v="using:ZeroFall.Settings.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="700" d:DesignHeight="500"
+        x:Class="ZeroFall.Settings.Views.SettingsWindow"
+        x:DataType="vm:SettingsWindowViewModel"
+        Title="设置"
+        Width="700" Height="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True" MinWidth="500" MinHeight="350">
+
+    <Grid RowDefinitions="*,Auto">
+        <TabbedPage Grid.Row="0"
+                    x:Name="SettingsTabs"
+                    TabPlacement="Left"/>
+
+        <Border Grid.Row="1"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="0,1,0,0"
+                Padding="16">
+            <StackPanel Spacing="8">
+                <TextBlock Text="{Binding FooterStatus}"
+                           TextWrapping="Wrap"
+                           FontSize="12"
+                           IsVisible="{Binding FooterStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           Foreground="{DynamicResource SemiColorText2}"/>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Spacing="12">
+                    <Button Content="取消" Command="{Binding CancelCommand}" MinWidth="80"/>
+                    <Button Content="保存" Click="OnSaveClicked" MinWidth="80"
+                            Theme="{DynamicResource SolidButton}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

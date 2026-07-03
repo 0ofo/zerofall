@@ -1,0 +1,51 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cc="using:ZeroFall.Dock.Controls">
+    <ControlTheme x:Key="{x:Type cc:PersistTabControl}"
+                  TargetType="cc:PersistTabControl"
+                  BasedOn="{StaticResource ScrollLineTabControl}">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="cc:PersistTabControl">
+                <Border HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <DockPanel>
+                        <Panel x:Name="PART_TabStripHost"
+                               DockPanel.Dock="{TemplateBinding TabStripPlacement}">
+                            <Grid x:Name="PART_TabStripLayout"
+                                  ColumnDefinitions="*,Auto">
+                                <ScrollViewer x:Name="PART_ScrollViewer"
+                                              Grid.Column="0"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Disabled"
+                                              VerticalContentAlignment="Center">
+                                    <TabStrip x:Name="PART_TabStrip"
+                                              Theme="{StaticResource LineTabStrip}"
+                                              Margin="0,0,4,0"
+                                              ItemTemplate="{Binding TabHeaderTemplate, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                </ScrollViewer>
+                                <ContentPresenter x:Name="PART_TabStripActions"
+                                                  Grid.Column="1"
+                                                  Margin="0,0,4,0"
+                                                  VerticalAlignment="Center"
+                                                  Content="{TemplateBinding TabStripRightContent}"/>
+                            </Grid>
+                            <Border Name="PART_BorderSeparator"
+                                    Background="{DynamicResource TabItemLinePipePressedBorderBrush}"/>
+                        </Panel>
+                        <Panel ClipToBounds="True">
+                            <ContentPresenter x:Name="PART_SelectedContentHost"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch"
+                                              Margin="{TemplateBinding Padding}"/>
+                            <cc:OverlayPanel x:Name="PART_NonReloadableOverlay"/>
+                        </Panel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

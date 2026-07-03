@@ -1,0 +1,25 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avaloniaHex="using:AvaloniaHex"
+             xmlns:rendering="using:AvaloniaHex.Rendering"
+             x:Class="ZeroFall.SqlEditor.Views.BinaryFilePreviewView"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             ClipToBounds="True">
+
+    <avaloniaHex:HexEditor x:Name="HexEditor"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           MinWidth="0"
+                           FontFamily="Consolas,Courier New,monospace"
+                           FontSize="13"
+                           IsHeaderVisible="True"
+                           VerticalScrollBarVisibility="Auto"
+                           HorizontalScrollBarVisibility="Visible">
+        <avaloniaHex:HexEditor.Columns>
+            <rendering:OffsetColumn />
+            <rendering:HexColumn IsUppercase="True" />
+            <rendering:AsciiColumn />
+        </avaloniaHex:HexEditor.Columns>
+    </avaloniaHex:HexEditor>
+</UserControl>

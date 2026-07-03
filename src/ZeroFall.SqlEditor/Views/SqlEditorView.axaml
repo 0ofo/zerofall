@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.SqlEditor.ViewModels"
+             xmlns:avaloniaEdit="using:AvaloniaEdit"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="ZeroFall.SqlEditor.Views.SqlEditorView"
+             x:DataType="vm:SqlEditorViewModel">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="GeometryDataTemplate" DataType="Geometry" x:CompileBindings="False">
+            <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding}"/>
+        </DataTemplate>
+
+        <ControlTheme x:Key="IconBorderlessButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Border Grid.Row="0" Padding="8,6">
+            <TextBlock Text="SQL 编辑器" FontWeight="SemiBold" VerticalAlignment="Center"/>
+        </Border>
+
+        <Border Grid.Row="1" Padding="4"
+                IsVisible="{Binding HasError}">
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="Red" TextWrapping="Wrap"/>
+        </Border>
+
+        <avaloniaEdit:TextEditor Grid.Row="2"
+                                  x:Name="Editor"
+                                  Margin="0"
+                                  Padding="4"
+                                  FontFamily="Consolas,Courier New,monospace"
+                                  ShowLineNumbers="True"
+                                  WordWrap="False"/>
+    </Grid>
+</UserControl>

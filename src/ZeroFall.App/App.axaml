@@ -1,0 +1,72 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ZeroFall.App.App"
+             xmlns:local="using:ZeroFall"
+             xmlns:converters="using:ZeroFall.Base.Converters"
+             xmlns:appconverters="using:ZeroFall.App.Converters"
+             xmlns:semi="https://irihi.tech/semi"
+             RequestedThemeVariant="Default">
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+
+    <Application.Styles>
+        <semi:SemiTheme Locale="zh-CN"/>
+        <semi:UrsaSemiTheme Locale="zh-CN"/>
+        <semi:DataGridSemiTheme />
+        <semi:AvaloniaEditSemiTheme />
+        <StyleInclude Source="avares://AvaloniaHex/Themes/Simple/AvaloniaHex.axaml"/>
+        <StyleInclude Source="avares://ZeroFall.App/Styles/CompactMenu.axaml"/>
+        <StyleInclude Source="avares://ZeroFall.App/Styles/FlyoutPresenterChrome.axaml"/>
+        <StyleInclude Source="avares://ZeroFall.App/Styles/DataGridCellLayout.axaml"/>
+        <StyleInclude Source="avares://ZeroFall.App/Styles/UiFont.axaml"/>
+        <StyleInclude Source="avares://ZeroFall.Dock/Controls/PersistTabControlStyles.axaml"/>
+        <StyleInclude Source="avares://LiveMarkdown.Avalonia/Styles.axaml"/>
+        <StyleInclude Source="avares://ZeroFall.App/Styles/LiveMarkdownFont.axaml"/>
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="avares://Semi.Avalonia/Icons/FillIcons.axaml"/>
+                <ResourceInclude Source="avares://Semi.Avalonia/Icons/StrokedIcons.axaml"/>
+                <ResourceInclude Source="avares://Semi.Avalonia/Icons/AIIcons.axaml"/>
+                <ResourceInclude Source="avares://ZeroFall.Dock/Controls/PersistTabControl.axaml"/>
+                <ResourceInclude Source="avares://LiveMarkdown.Avalonia/Defaults.axaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="White" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="Black" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+            <converters:BoolToFontWeightConverter x:Key="BoolToFontWeightConverter" />
+            <appconverters:TreeNodeIconConverter x:Key="TreeNodeIconConverter" />
+            <converters:EqualsConverter x:Key="EqualsConverter" />
+            <CornerRadius x:Key="ButtonCornerRadius">3</CornerRadius>
+            <FontFamily x:Key="ZeroFallUiFontFamily">avares://ZeroFall.App/Assets/Fonts#HarmonyOS Sans SC</FontFamily>
+            <FontFamily x:Key="ZeroFallCjkMonoFontFamily">avares://ZeroFall.App/Assets/Fonts#HarmonyOS Sans SC, Consolas, Courier New, monospace</FontFamily>
+            <x:Double x:Key="ZeroFallCjkLineHeightSmall">18</x:Double>
+            <x:Double x:Key="ZeroFallCjkLineHeightRegular">21</x:Double>
+            <x:Double x:Key="ZeroFallDataGridRowHeight">24</x:Double>
+
+            <ControlTheme x:Key="DataGridCellTextBlockTheme" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="{DynamicResource SemiFontSizeRegular}"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                <Setter Property="TextWrapping" Value="NoWrap"/>
+            </ControlTheme>
+            <ControlTheme x:Key="DataGridCellTextBoxTheme" TargetType="TextBox">
+                <Setter Property="FontSize" Value="{DynamicResource SemiFontSizeRegular}"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Padding" Value="2"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZeroFall AI Chat</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #fff;
+      --text: #1f2329;
+      --text-2: #646a73;
+      --border: #dee0e3;
+      --fill: #f5f6f7;
+      --primary: #1664ff;
+      --code-bg: #f6f8fa;
+      font-family: "HarmonyOS Sans SC", "Microsoft YaHei", system-ui, sans-serif;
+    }
+    :root.dark {
+      color-scheme: dark;
+      --bg: #16161a;
+      --text: #f4f4f5;
+      --text-2: #a9adb5;
+      --border: #34363d;
+      --fill: #22242a;
+      --primary: #3370ff;
+      --code-bg: #1f2229;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .chat-root {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+    .chat-inner { padding: 6px 18px 10px 8px; }
+    .empty-state {
+      margin: 18px 8px;
+      color: var(--text-2);
+      font-size: 13px;
+      text-align: center;
+    }
+    .message { margin: 4px 0; }
+    .role-user { display: flex; justify-content: flex-end; }
+    .bubble {
+      border-radius: 12px;
+      padding: 6px 9px;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .user-bubble {
+      max-width: min(520px, 85%);
+      white-space: pre-wrap;
+      color: #fff;
+      background: var(--primary);
+    }
+    .assistant-body { font-size: 13px; line-height: 1.6; }
+    .tool-bubble { border: 1px solid var(--border); background: var(--fill); }
+    .tool-title { color: var(--text-2); font-size: 12px; margin-bottom: 4px; }
+    .tool-command {
+      margin: 4px 0;
+      padding: 6px;
+      border-radius: 6px;
+      overflow-x: auto;
+      background: var(--code-bg);
+      font-family: Consolas, Menlo, monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    .tool-running { color: var(--text-2); font-size: 12px; }
+    .markdown-block { overflow-wrap: anywhere; }
+    .markdown-block > :first-child { margin-top: 0.35em; }
+    .markdown-block > :last-child { margin-bottom: 0.35em; }
+    pre, code { font-family: Consolas, Menlo, monospace; }
+    pre {
+      padding: 8px;
+      border-radius: 6px;
+      overflow-x: auto;
+      background: var(--code-bg);
+    }
+    code {
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: var(--code-bg);
+    }
+    pre code { padding: 0; background: transparent; }
+    .cursor {
+      display: inline-block;
+      width: 6px;
+      height: 1em;
+      margin-left: 2px;
+      vertical-align: -0.15em;
+      background: var(--primary);
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+  </style>
+</head>
+<body>
+  <main class="chat-root" id="scrollRoot">
+    <div class="chat-inner" id="list">
+      <div class="empty-state" id="empty">AI 聊天视图已就绪，暂无对话内容</div>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var list = document.getElementById('list');
+      var empty = document.getElementById('empty');
+      var scrollRoot = document.getElementById('scrollRoot');
+      var autoFollow = true;
+      var nodes = Object.create(null);
+
+      scrollRoot.addEventListener('scroll', function () {
+        autoFollow = scrollRoot.scrollTop + scrollRoot.clientHeight >= scrollRoot.scrollHeight - 48;
+      });
+
+      function scrollTail() {
+        if (!autoFollow) return;
+        scrollRoot.scrollTop = scrollRoot.scrollHeight;
+      }
+
+      function syncEmpty() {
+        empty.style.display = Object.keys(nodes).length === 0 ? '' : 'none';
+      }
+
+      function escapeText(text) {
+        return String(text || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
+
+      function renderBlocks(container, blocks) {
+        container.querySelectorAll('[data-block]').forEach(function (n) { n.remove(); });
+        (blocks || []).forEach(function (block) {
+          var div = document.createElement('div');
+          div.className = 'markdown-block';
+          div.setAttribute('data-block', block.id || '');
+          div.innerHTML = block.html || '';
+          container.appendChild(div);
+        });
+      }
+
+      function renderTail(container, html, streaming) {
+        var tail = container.querySelector('[data-tail]');
+        if (!html) {
+          if (tail) tail.remove();
+        } else if (!tail) {
+          tail = document.createElement('div');
+          tail.className = 'markdown-block tail';
+          tail.setAttribute('data-tail', '1');
+          container.appendChild(tail);
+        }
+        if (tail) tail.innerHTML = html;
+
+        var cursor = container.querySelector('[data-cursor]');
+        if (streaming) {
+          if (!cursor) {
+            cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            cursor.setAttribute('data-cursor', '1');
+            container.appendChild(cursor);
+          }
+        } else if (cursor) {
+          cursor.remove();
+        }
+      }
+
+      function buildNode(message) {
+        var article = document.createElement('article');
+        article.className = 'message role-' + (message.role || 'assistant');
+        if (message.isStreaming) article.classList.add('streaming');
+
+        if (message.role === 'user') {
+          var bubble = document.createElement('div');
+          bubble.className = 'bubble user-bubble';
+          bubble.textContent = message.content || '';
+          article.appendChild(bubble);
+          return article;
+        }
+
+        if (message.role === 'tool') {
+          var tool = document.createElement('div');
+          tool.className = 'bubble tool-bubble';
+          var title = document.createElement('div');
+          title.className = 'tool-title';
+          title.textContent = message.title || '工具调用';
+          tool.appendChild(title);
+          if (message.command) {
+            var cmd = document.createElement('pre');
+            cmd.className = 'tool-command';
+            cmd.textContent = message.command;
+            tool.appendChild(cmd);
+          }
+          renderBlocks(tool, message.blocks || []);
+          renderTail(tool, message.tailHtml || '', false);
+          if (message.isToolRunning) {
+            var running = document.createElement('div');
+            running.className = 'tool-running';
+            running.textContent = '正在执行...';
+            tool.appendChild(running);
+          }
+          article.appendChild(tool);
+          return article;
+        }
+
+        var body = document.createElement('div');
+        body.className = 'assistant-body';
+        renderBlocks(body, message.blocks || []);
+        renderTail(body, message.tailHtml || '', !!message.isStreaming);
+        article.appendChild(body);
+        return article;
+      }
+
+      function upsertMessage(message) {
+        if (!message || !message.id) return;
+        var existing = nodes[message.id];
+        if (!existing) {
+          var node = buildNode(message);
+          list.appendChild(node);
+          nodes[message.id] = { message: message, node: node };
+        } else {
+          existing.message = Object.assign(existing.message, message);
+          var fresh = buildNode(existing.message);
+          existing.node.replaceWith(fresh);
+          existing.node = fresh;
+        }
+        syncEmpty();
+        scrollTail();
+      }
+
+      function appendBlocks(messageId, blocks) {
+        var entry = nodes[messageId];
+        if (!entry || !blocks || !blocks.length) return;
+        entry.message.blocks = (entry.message.blocks || []).concat(blocks);
+        upsertMessage(entry.message);
+      }
+
+      function replaceTail(messageId, html) {
+        var entry = nodes[messageId];
+        if (!entry) return;
+        entry.message.tailHtml = html || '';
+        upsertMessage(entry.message);
+      }
+
+      function finishMessage(messageId) {
+        var entry = nodes[messageId];
+        if (!entry) return;
+        var msg = entry.message;
+        if (msg.tailHtml) {
+          msg.blocks = msg.blocks || [];
+          msg.blocks.push({ id: msg.id + '-tail-' + msg.blocks.length, html: msg.tailHtml });
+          msg.tailHtml = '';
+        }
+        msg.isStreaming = false;
+        upsertMessage(msg);
+      }
+
+      function setMessages(messages) {
+        Object.keys(nodes).forEach(function (id) {
+          nodes[id].node.remove();
+          delete nodes[id];
+        });
+        (messages || []).forEach(upsertMessage);
+        syncEmpty();
+        scrollTail();
+      }
+
+      function setTheme(theme) {
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      }
+
+      function clearAll() {
+        setMessages([]);
+      }
+
+      window.zerofallChat = {
+        receive: function (command) {
+          if (!command || !command.type) return;
+          switch (command.type) {
+            case 'setMessages': setMessages(command.messages); break;
+            case 'upsertMessage': upsertMessage(command.message); break;
+            case 'appendBlocks': appendBlocks(command.messageId, command.blocks); break;
+            case 'replaceTail': replaceTail(command.messageId, command.html); break;
+            case 'finishMessage': finishMessage(command.messageId); break;
+            case 'setTheme': setTheme(command.theme); break;
+            case 'clear': clearAll(); break;
+          }
+        }
+      };
+
+      window.aiChatReady = true;
+    })();
+  </script>
+</body>
+</html>

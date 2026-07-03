@@ -1,0 +1,16 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             xmlns:views="using:ZeroFall.Browser.Views"
+             x:Class="ZeroFall.Browser.Views.TrafficDetailView"
+             x:DataType="vm:TrafficMonitorTabViewModel"
+             ClipToBounds="True">
+    <views:HttpMessagePairView x:Name="MessagePair"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               RequestIsReadOnly="True"
+                               ReplayRealHostIsReadOnly="True"
+                               ReplayHeaderIsInteractive="False"
+                               ShowResponseHeaderRightText="True"
+                               ShowSendToReplayMenu="True"/>
+</UserControl>

@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             xmlns:dt="using:ZeroFall.DataTable.Views"
+             x:Class="ZeroFall.Browser.Views.HttpIntruderResultsView"
+             x:DataType="vm:HttpIntruderTabViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+    <dt:DataTableView DataContext="{Binding ResultsTable}"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"/>
+</UserControl>

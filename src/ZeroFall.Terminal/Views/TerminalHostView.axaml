@@ -1,0 +1,63 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Terminal.ViewModels"
+             xmlns:cc="using:ZeroFall.Dock.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="300"
+             x:Class="ZeroFall.Terminal.Views.TerminalHostView"
+             x:DataType="vm:TerminalHostViewModel"
+             x:Name="Root">
+    <UserControl.Resources>
+        <ControlTheme x:Key="TabCloseButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText2}"/>
+        </ControlTheme>
+
+        <DataTemplate x:Key="TerminalTabHeaderTemplate" x:CompileBindings="False">
+            <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Title}"
+                           MaxWidth="120"
+                           TextTrimming="CharacterEllipsis"
+                           FontSize="12"
+                           VerticalAlignment="Center"/>
+                <Button VerticalAlignment="Center"
+                        Theme="{StaticResource TabCloseButton}"
+                        ToolTip.Tip="读取终端内容并复制（与界面一致）"
+                        Command="{Binding DataContext.ReadSessionCommand, ElementName=Root}"
+                        CommandParameter="{Binding}">
+                    <PathIcon Data="{DynamicResource SemiIconCopy}" Width="12" Height="12"/>
+                </Button>
+                <Button Classes="DockTabClose"
+                        VerticalAlignment="Center"
+                        Theme="{StaticResource TabCloseButton}"
+                        Command="{Binding DataContext.CloseSessionCommand, ElementName=Root}"
+                        CommandParameter="{Binding}"
+                        IsVisible="{Binding DataContext.CanCloseSessions, ElementName=Root}">
+                    <PathIcon Data="{DynamicResource SemiIconClose}" Width="12" Height="12"/>
+                </Button>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TerminalTabContentTemplate" x:CompileBindings="False">
+            <ContentPresenter Content="{Binding Content}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <cc:PersistTabControl x:Name="PART_TerminalTabs"
+                          ItemsSource="{Binding Tabs}"
+                          SelectedItem="{Binding SelectedTab}"
+                          TabStripPlacement="Right"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          TabHeaderTemplate="{StaticResource TerminalTabHeaderTemplate}"
+                          PersistContentTemplate="{StaticResource TerminalTabContentTemplate}" />
+</UserControl>

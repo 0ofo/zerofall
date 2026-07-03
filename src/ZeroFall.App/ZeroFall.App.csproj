@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <NoWarn>$(NoWarn);MSB3277</NoWarn>
+        <RootNamespace>ZeroFall.App</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <DebugSymbols>false</DebugSymbols>
+        <CopyDebugSymbolsToPublishDirectory>false</CopyDebugSymbolsToPublishDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\..\magic.mgc" Link="magic.mgc" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Condition="Exists('..\..\..\magic.mgc')" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="..\..\assets\fonts\HarmonyOS_Sans_SC_Regular.ttf" Link="Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf" />
+        <AvaloniaResource Include="..\..\assets\fonts\HarmonyOS_Sans_SC_Medium.ttf" Link="Assets/Fonts/HarmonyOS_Sans_SC_Medium.ttf" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="12.0.5" />
+        <PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3" />
+        <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="2.0.1" />
+        <PackageReference Include="Semi.Avalonia" Version="12.0.3" />
+        <PackageReference Include="Semi.Avalonia.DataGrid" Version="12.0.0" />
+        <PackageReference Include="Semi.Avalonia.AvaloniaEdit" Version="12.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-preview.5.26302.115" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZeroFall.Dock\ZeroFall.Dock.csproj" />
+        <ProjectReference Include="..\ZeroFall.AiPanel\ZeroFall.AiPanel.csproj" />
+        <ProjectReference Include="..\ZeroFall.AssetRecon\ZeroFall.AssetRecon.csproj" />
+        <ProjectReference Include="..\ZeroFall.Terminal\ZeroFall.Terminal.csproj" />
+        <ProjectReference Include="..\ZeroFall.SqlEditor\ZeroFall.SqlEditor.csproj" />
+        <ProjectReference Include="..\ZeroFall.Browser\ZeroFall.Browser.csproj" />
+        <ProjectReference Include="..\ZeroFall.Sidebar\ZeroFall.Sidebar.csproj" />
+        <ProjectReference Include="..\ZeroFall.Settings\ZeroFall.Settings.csproj" />
+        <ProjectReference Include="..\ZeroFall.Platform\ZeroFall.Platform.csproj" />
+    </ItemGroup>
+</Project>

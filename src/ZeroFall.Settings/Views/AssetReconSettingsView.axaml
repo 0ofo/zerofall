@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.Settings.AssetReconSettingsView"
+             x:DataType="vm:AssetReconSettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16">
+            <u:UrsaGroupBox Header="FOFA">
+                <u:Form LabelPosition="Left"
+                        LabelWidth="100"
+                        LabelAlignment="Right"
+                        HorizontalAlignment="Stretch">
+                    <ToggleSwitch IsChecked="{Binding FofaEnabled}"
+                                  u:FormItem.Label="启用"/>
+                    <TextBox Text="{Binding FofaEmail}"
+                             PlaceholderText="your@email.com"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="Email"/>
+                    <TextBox Text="{Binding FofaKey}"
+                             PasswordChar="●"
+                             PlaceholderText="输入 FOFA API Key"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API Key"/>
+                    <TextBox Text="{Binding FofaBaseUrl}"
+                             PlaceholderText="https://fofa.info"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API 地址"/>
+                </u:Form>
+            </u:UrsaGroupBox>
+
+            <u:UrsaGroupBox Header="Hunter">
+                <u:Form LabelPosition="Left"
+                        LabelWidth="100"
+                        LabelAlignment="Right"
+                        HorizontalAlignment="Stretch">
+                    <ToggleSwitch IsChecked="{Binding HunterEnabled}"
+                                  u:FormItem.Label="启用"/>
+                    <TextBox Text="{Binding HunterKey}"
+                             PasswordChar="●"
+                             PlaceholderText="输入 Hunter API Key"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API Key"/>
+                    <TextBox Text="{Binding HunterBaseUrl}"
+                             PlaceholderText="https://hunter.qianxin.com"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API 地址"/>
+                </u:Form>
+            </u:UrsaGroupBox>
+
+            <u:UrsaGroupBox Header="Quake">
+                <u:Form LabelPosition="Left"
+                        LabelWidth="100"
+                        LabelAlignment="Right"
+                        HorizontalAlignment="Stretch">
+                    <ToggleSwitch IsChecked="{Binding QuakeEnabled}"
+                                  u:FormItem.Label="启用"/>
+                    <TextBox Text="{Binding QuakeKey}"
+                             PasswordChar="●"
+                             PlaceholderText="输入 Quake API Key"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API Key"/>
+                    <TextBox Text="{Binding QuakeBaseUrl}"
+                             PlaceholderText="https://quake.360.net"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API 地址"/>
+                </u:Form>
+            </u:UrsaGroupBox>
+
+            <u:UrsaGroupBox Header="Shodan">
+                <u:Form LabelPosition="Left"
+                        LabelWidth="100"
+                        LabelAlignment="Right"
+                        HorizontalAlignment="Stretch">
+                    <ToggleSwitch IsChecked="{Binding ShodanEnabled}"
+                                  u:FormItem.Label="启用"/>
+                    <TextBox Text="{Binding ShodanKey}"
+                             PasswordChar="●"
+                             PlaceholderText="输入 Shodan API Key"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API Key"/>
+                    <TextBox Text="{Binding ShodanBaseUrl}"
+                             PlaceholderText="https://api.shodan.io"
+                             HorizontalAlignment="Stretch"
+                             u:FormItem.Label="API 地址"/>
+                </u:Form>
+            </u:UrsaGroupBox>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AiPanel.ViewModels"
+             xmlns:views="using:ZeroFall.AiPanel.Views"
+             xmlns:models="using:ZeroFall.AiPanel.Models"
+             x:Class="ZeroFall.AiPanel.Views.AiChatNativeView"
+             x:Name="NativeRoot"
+             x:DataType="vm:AiPanelViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        <ScrollViewer x:Name="ChatScroll"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      HorizontalScrollBarVisibility="Disabled"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel x:Name="ChatContent"
+                        HorizontalAlignment="Stretch"
+                        Margin="0,0,8,4">
+                <ItemsControl x:Name="RoundsItems"
+                              HorizontalAlignment="Stretch"
+                              ItemsSource="{Binding SurfaceRounds}">
+                    <ItemsControl.Styles>
+                        <Style Selector="ItemsControl > ContentPresenter">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        </Style>
+                    </ItemsControl.Styles>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:ChatRoundBlock">
+                            <views:ChatRoundControl PanelViewModel="{Binding $parent[ItemsControl].DataContext}"
+                                                    HorizontalAlignment="Stretch"
+                                                    x:CompileBindings="False"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="正在等待回复…"
+                           Margin="0,2,0,0"
+                           FontSize="11"
+                           Foreground="{DynamicResource SemiColorText2}"
+                           IsVisible="{Binding IsWaitingForReply}"/>
+            </StackPanel>
+        </ScrollViewer>
+        <Border Background="{DynamicResource SemiColorBackground0}"
+                Opacity="0.72"
+                IsVisible="{Binding IsLoadingHistory}"
+                IsHitTestVisible="True">
+            <TextBlock Text="正在加载对话…"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="12"
+                       Foreground="{DynamicResource SemiColorText2}"/>
+        </Border>
+    </Grid>
+</UserControl>

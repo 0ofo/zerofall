@@ -1,0 +1,332 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.Settings.AiSettingsView"
+             x:DataType="vm:AiSettingsViewModel"
+             x:Name="Root"
+             x:CompileBindings="False">
+
+    <Grid ColumnDefinitions="168,*"
+          Margin="16"
+          MinHeight="420">
+
+        <!-- 左侧：内置运营商 -->
+        <Border Grid.Column="0"
+                Margin="0,0,12,0"
+                Padding="8"
+                CornerRadius="6"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="1">
+            <DockPanel LastChildFill="True">
+                <TextBlock DockPanel.Dock="Top"
+                           Text="运营商"
+                           FontWeight="SemiBold"
+                           Margin="4,0,0,10"/>
+                <ListBox ItemsSource="{Binding Providers}"
+                         SelectedItem="{Binding SelectedProvider}"
+                         Background="Transparent"
+                         BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="vm:AiProviderItemViewModel"
+                                      x:CompileBindings="False">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  Margin="2,1">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding DisplayName}"
+                                           VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <Border Grid.Column="1"
+                                        Padding="5,1"
+                                        CornerRadius="3"
+                                        VerticalAlignment="Center"
+                                        IsVisible="{Binding IsConfigured}"
+                                        Background="{DynamicResource SemiColorSuccessLight}">
+                                    <TextBlock Text="已配置"
+                                               FontSize="10"
+                                               Foreground="{DynamicResource SemiColorSuccess}"/>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- 右侧：运营商详情 -->
+        <ScrollViewer Grid.Column="1"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Spacing="14">
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding SelectedProvider.DisplayName, FallbackValue=AI 设置}"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- API 密钥 -->
+                <Border Padding="14"
+                        CornerRadius="6"
+                        BorderBrush="{DynamicResource SemiColorBorder}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="API 密钥"
+                                   FontWeight="SemiBold"/>
+                        <Grid ColumnDefinitions="*,Auto,Auto">
+                            <Panel Grid.Column="0">
+                                <TextBox Text="{Binding ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PasswordChar="●"
+                                         PlaceholderText="{Binding ApiKeyPlaceholder}"
+                                         HorizontalAlignment="Stretch"
+                                         IsVisible="{Binding !IsApiKeyVisible}"/>
+                                <TextBox Text="{Binding ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         PlaceholderText="{Binding ApiKeyPlaceholder}"
+                                         HorizontalAlignment="Stretch"
+                                         IsVisible="{Binding IsApiKeyVisible}"/>
+                            </Panel>
+                            <Button Grid.Column="1"
+                                    Content="{Binding ApiKeyVisibilityLabel}"
+                                    Command="{Binding ToggleApiKeyVisibilityCommand}"
+                                    Classes="Small"
+                                    Margin="8,0,0,0"
+                                    ToolTip.Tip="显示/隐藏密钥"/>
+                            <Button Grid.Column="2"
+                                    Content="检测"
+                                    Command="{Binding TestConnectionCommand}"
+                                    IsEnabled="{Binding !IsTesting}"
+                                    Classes="Small"
+                                    Margin="8,0,0,0"/>
+                        </Grid>
+                        <TextBlock Text="填写后点「检测」验证连接；保存后聊天面板将使用当前运营商。"
+                                   Opacity="0.7"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- API 地址 -->
+                <Border Padding="14"
+                        CornerRadius="6"
+                        BorderBrush="{DynamicResource SemiColorBorder}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="API 地址"
+                                   FontWeight="SemiBold"/>
+                        <TextBox Text="{Binding ApiBaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 IsReadOnly="{Binding IsCustomProvider, Converter={x:Static BoolConverters.Not}}"
+                                 HorizontalAlignment="Stretch"
+                                 PlaceholderText="https://..."/>
+                        <TextBlock Text="{Binding EndpointHint}"
+                                   IsVisible="{Binding EndpointHint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                   Opacity="0.7"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock IsVisible="{Binding IsCustomProvider}"
+                                   Opacity="0.7"
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Text="自定义运营商需填写 OpenAI 兼容的 Base URL，通常以 /v1 结尾。"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- 模型 -->
+                <Border Padding="14"
+                        CornerRadius="6"
+                        BorderBrush="{DynamicResource SemiColorBorder}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto,Auto">
+                            <TextBlock Grid.Column="0"
+                                       Text="模型"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Column="1"
+                                    Content="获取模型列表"
+                                    Command="{Binding FetchModelsCommand}"
+                                    IsEnabled="{Binding !IsFetchingModels}"
+                                    Classes="Small"
+                                    Margin="0,0,8,0"/>
+                            <Button Grid.Column="2"
+                                    Content="清空"
+                                    Command="{Binding ClearCatalogModelsCommand}"
+                                    IsEnabled="{Binding HasCatalogModels}"
+                                    Classes="Small"/>
+                        </Grid>
+
+                        <u:Form LabelPosition="Left"
+                                LabelWidth="88"
+                                LabelAlignment="Right"
+                                HorizontalAlignment="Stretch">
+                            <ComboBox ItemsSource="{Binding CatalogModels}"
+                                      SelectedItem="{Binding SelectedCatalogModel, Mode=TwoWay}"
+                                      Classes="Small"
+                                      HorizontalAlignment="Stretch"
+                                      u:FormItem.Label="默认模型">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:AiModelRowViewModel"
+                                                  x:CompileBindings="False">
+                                        <TextBlock Text="{Binding Id}"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </u:Form>
+
+                        <TextBlock Text="尚未添加模型。点「获取模型列表」或手动输入。"
+                                   Opacity="0.7"
+                                   FontSize="12"
+                                   IsVisible="{Binding !HasCatalogModels}"/>
+
+                        <ItemsControl ItemsSource="{Binding CatalogModels}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:AiModelRowViewModel"
+                                              x:CompileBindings="False">
+                                    <Grid ColumnDefinitions="*,Auto,Auto"
+                                          Margin="0,3">
+                                        <TextBlock Grid.Column="0"
+                                                   Text="{Binding Id}"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,0,8,0"/>
+                                        <NumericUpDown Grid.Column="1"
+                                                       Value="{Binding ContextTokens}"
+                                                       Minimum="0"
+                                                       Maximum="2000000"
+                                                       Increment="1000"
+                                                       Width="120"
+                                                       Classes="Small"
+                                                       Margin="0,0,8,0"
+                                                       ToolTip.Tip="上下文 tokens，0 = 自动推断"/>
+                                        <Button Grid.Column="2"
+                                                Content="删除"
+                                                Classes="Small"
+                                                Command="{Binding DataContext.RemoveCatalogModelCommand, ElementName=Root}"
+                                                CommandParameter="{Binding}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8">
+                            <TextBox Text="{Binding CustomModelInput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Classes="Small"
+                                     MinWidth="180"
+                                     PlaceholderText="手动输入模型名"/>
+                            <Button Content="添加"
+                                    Command="{Binding AddModelToListCommand}"
+                                    Classes="Small"/>
+                        </StackPanel>
+
+                        <!-- 拉取结果 -->
+                        <StackPanel Spacing="8"
+                                    IsVisible="{Binding HasFetchedModels}">
+                            <Separator Opacity="0.4"/>
+                            <TextBlock Text="从 API 勾选要添加的模型"
+                                       FontSize="12"
+                                       Opacity="0.8"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="8">
+                                <TextBox Text="{Binding FetchFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Classes="Small"
+                                         Width="180"
+                                         PlaceholderText="搜索模型名"/>
+                                <Button Content="全选"
+                                        Command="{Binding SelectAllFetchedCommand}"
+                                        CommandParameter="{x:True}"
+                                        Classes="Small"/>
+                                <Button Content="取消全选"
+                                        Command="{Binding SelectAllFetchedCommand}"
+                                        CommandParameter="{x:False}"
+                                        Classes="Small"/>
+                                <Button Content="添加选中"
+                                        Command="{Binding AddSelectedFetchedModelsCommand}"
+                                        Classes="Small"/>
+                            </StackPanel>
+                            <ScrollViewer MaxHeight="160"
+                                          MinHeight="60"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <ItemsControl ItemsSource="{Binding FilteredFetchedModels}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:AiModelRowViewModel"
+                                                      x:CompileBindings="False">
+                                            <CheckBox Margin="0,3"
+                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                      IsEnabled="{Binding !AlreadyInCatalog}"
+                                                      ToolTip.Tip="{Binding FetchedHint}">
+                                                <StackPanel Orientation="Horizontal"
+                                                            Spacing="8">
+                                                    <TextBlock Text="{Binding Id}"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               MaxWidth="320"/>
+                                                    <TextBlock Text="{Binding FetchedHint}"
+                                                               Opacity="0.65"
+                                                               FontSize="11"
+                                                               IsVisible="{Binding AlreadyInCatalog}"/>
+                                                </StackPanel>
+                                            </CheckBox>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- 上下文压缩 -->
+                <Border Padding="14"
+                        CornerRadius="6"
+                        BorderBrush="{DynamicResource SemiColorBorder}"
+                        BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="上下文压缩"
+                                   FontWeight="SemiBold"/>
+                        <u:Form LabelPosition="Left"
+                                LabelWidth="88"
+                                LabelAlignment="Right"
+                                HorizontalAlignment="Stretch">
+                            <NumericUpDown Value="{Binding ContextCompressionThresholdPercent, Mode=TwoWay}"
+                                           Minimum="40"
+                                           Maximum="80"
+                                           Increment="5"
+                                           Width="120"
+                                           Classes="Small"
+                                           u:FormItem.Label="触发阈值 (%)"/>
+                        </u:Form>
+                        <TextBlock TextWrapping="Wrap"
+                                   Opacity="0.7"
+                                   FontSize="11"
+                                   Text="一轮对话结束后，当前上下文占用达到该比例才自动压缩。默认 50%，可设 40%-80%。"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap"
+                           Opacity="0.65"
+                           FontSize="11"
+                           Text="MCP 外部工具：设置 → MCP 服务。"/>
+
+                <Border CornerRadius="4"
+                        Padding="8,6"
+                        IsVisible="{Binding HasError}"
+                        Background="{DynamicResource SemiColorDangerLight}">
+                    <TextBlock Text="{Binding ErrorMessage}"
+                               Foreground="{DynamicResource SemiColorDanger}"
+                               TextWrapping="Wrap"
+                               FontSize="12"/>
+                </Border>
+
+                <Border CornerRadius="4"
+                        Padding="8,6"
+                        IsVisible="{Binding TestResult, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        Background="{DynamicResource SemiColorSuccessLight}">
+                    <TextBlock Text="{Binding TestResult}"
+                               TextWrapping="Wrap"
+                               FontSize="12"
+                               Foreground="{DynamicResource SemiColorSuccess}"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

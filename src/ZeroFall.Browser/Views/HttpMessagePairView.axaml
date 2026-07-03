@@ -1,0 +1,142 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avaloniaEdit="using:AvaloniaEdit"
+             xmlns:avaloniaHex="using:AvaloniaHex"
+             xmlns:rendering="using:AvaloniaHex.Rendering"
+             x:Class="ZeroFall.Browser.Views.HttpMessagePairView"
+             x:Name="Root"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             ClipToBounds="True">
+    <Grid ColumnDefinitions="*,Auto,*" ClipToBounds="True">
+        <Border Grid.Column="0"
+                x:Name="RequestPanel"
+                Theme="{StaticResource CardBorder}"
+                Padding="0">
+            <Grid RowDefinitions="Auto,*">
+                <Border Grid.Row="0"
+                        Padding="6,4"
+                        Background="{DynamicResource SemiColorFill0}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <CheckBox Grid.Column="0"
+                                  Content="HTTPS"
+                                  IsChecked="{Binding ReplayIsHttps, ElementName=Root}"
+                                  IsHitTestVisible="{Binding ReplayHeaderIsInteractive, ElementName=Root}"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0"/>
+                        <TextBox Grid.Column="1"
+                                 Text="{Binding ReplayRealHost, ElementName=Root}"
+                                 PlaceholderText="Host"
+                                 Classes="Small"
+                                 IsReadOnly="{Binding ReplayRealHostIsReadOnly, ElementName=Root}"
+                                 VerticalAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Height="{DynamicResource SemiHeightControlSmall}"
+                                 MinWidth="0"
+                                 MinHeight="0"
+                                 Padding="6,0"/>
+                    </Grid>
+                </Border>
+                <avaloniaEdit:TextEditor x:Name="RequestEditor"
+                                         Grid.Row="1"
+                                         IsReadOnly="{Binding RequestIsReadOnly, ElementName=Root}"
+                                         ShowLineNumbers="True"
+                                         WordWrap="False"
+                                         FontFamily="Consolas,Courier New,monospace"
+                                         FontSize="12"
+                                         Padding="4">
+                    <avaloniaEdit:TextEditor.ContextMenu>
+                        <ContextMenu x:Name="RequestContextMenu" Opening="RequestContextMenu_Opening">
+                            <MenuItem Header="发送到重放"
+                                      Command="{Binding SendToReplayCommand, ElementName=Root}"
+                                      IsVisible="{Binding ShowSendToReplayMenu, ElementName=Root}"/>
+                            <Separator IsVisible="{Binding ShowSendToReplayMenu, ElementName=Root}"/>
+                            <MenuItem Header="复制" InputGesture="Ctrl+C" Click="RequestCopy_Click"/>
+                            <MenuItem Header="全选" InputGesture="Ctrl+A" Click="RequestSelectAll_Click"/>
+                        </ContextMenu>
+                    </avaloniaEdit:TextEditor.ContextMenu>
+                </avaloniaEdit:TextEditor>
+            </Grid>
+        </Border>
+
+        <GridSplitter x:Name="ResponseSplitter"
+                      Grid.Column="1"
+                      Width="4"
+                      ShowsPreview="True"
+                      ResizeDirection="Columns"
+                      ResizeBehavior="PreviousAndNext"
+                      Background="{DynamicResource SemiColorBackground0}"
+                      IsVisible="{Binding ShowResponse, ElementName=Root}"/>
+
+        <Border x:Name="ResponsePanel"
+                Grid.Column="2"
+                MinWidth="0"
+                Theme="{StaticResource CardBorder}"
+                Padding="0"
+                IsVisible="{Binding ShowResponse, ElementName=Root}">
+            <Panel>
+                <TabControl x:Name="ResponseTabControl"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            TabStripPlacement="Top">
+                    <TabItem Header="Raw">
+                        <Grid HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                            <avaloniaEdit:TextEditor x:Name="ResponseEditor"
+                                                     HorizontalAlignment="Stretch"
+                                                     VerticalAlignment="Stretch"
+                                                     MinWidth="0"
+                                                     IsReadOnly="True"
+                                                     ShowLineNumbers="True"
+                                                     WordWrap="False"
+                                                     FontFamily="Consolas,Courier New,monospace"
+                                                     FontSize="12"
+                                                     Padding="4"
+                                                     VerticalScrollBarVisibility="Auto"
+                                                     HorizontalScrollBarVisibility="Visible">
+                                <avaloniaEdit:TextEditor.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="复制" InputGesture="Ctrl+C" Click="ResponseCopy_Click"/>
+                                        <MenuItem Header="全选" InputGesture="Ctrl+A" Click="ResponseSelectAll_Click"/>
+                                    </ContextMenu>
+                                </avaloniaEdit:TextEditor.ContextMenu>
+                            </avaloniaEdit:TextEditor>
+                        </Grid>
+                    </TabItem>
+                    <TabItem x:Name="ResponseHexTabItem" Header="Hex">
+                        <Grid HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch">
+                            <avaloniaHex:HexEditor x:Name="ResponseHexEditor"
+                                                   HorizontalAlignment="Stretch"
+                                                   VerticalAlignment="Stretch"
+                                                   MinWidth="0"
+                                                   FontFamily="Consolas,Courier New,monospace"
+                                                   FontSize="12"
+                                                   IsHeaderVisible="True"
+                                                   VerticalScrollBarVisibility="Auto"
+                                                   HorizontalScrollBarVisibility="Visible">
+                                <avaloniaHex:HexEditor.Columns>
+                                    <rendering:OffsetColumn />
+                                    <rendering:HexColumn IsUppercase="True" />
+                                    <rendering:AsciiColumn />
+                                </avaloniaHex:HexEditor.Columns>
+                            </avaloniaHex:HexEditor>
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+                <TextBlock x:Name="ResponseTabLatencyText"
+                           Text="{Binding ResponseHeaderRightText, ElementName=Root}"
+                           IsVisible="{Binding ShowResponseHeaderRightText, ElementName=Root}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Top"
+                           Margin="0,7,10,0"
+                           FontSize="12"
+                           Opacity="0.75"
+                           FontFamily="Consolas,Courier New,monospace"
+                           IsHitTestVisible="False"/>
+            </Panel>
+        </Border>
+    </Grid>
+</UserControl>

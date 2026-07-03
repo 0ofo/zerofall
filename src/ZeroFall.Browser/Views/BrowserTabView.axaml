@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             x:Class="ZeroFall.Browser.Views.BrowserTabView"
+             x:DataType="vm:BrowserTabViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto" Margin="4,4,4,2">
+            <Button Grid.Column="0"
+                    Margin="0,0,4,0"
+                    VerticalAlignment="Center"
+                    Classes="Small"
+                    Command="{Binding RefreshCommand}"
+                    ToolTip.Tip="刷新">
+                <PathIcon Data="{DynamicResource SemiIconRefresh}" Width="14" Height="14"/>
+            </Button>
+            <TextBox x:Name="AddressBar"
+                     Grid.Column="1"
+                     PlaceholderText="输入 URL 后按 Enter"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Center"
+                     Classes="Small"
+                     KeyDown="AddressBar_OnKeyDown"/>
+            <ComboBox x:Name="ZoomCombo"
+                      Grid.Column="2"
+                      Margin="4,0,0,0"
+                      Width="80"
+                      VerticalAlignment="Center"
+                      Classes="Small"
+                      SelectionChanged="ZoomCombo_OnSelectionChanged"/>
+            <Button x:Name="DevToolsButton"
+                    Grid.Column="3"
+                    Margin="4,0,0,0"
+                    VerticalAlignment="Center"
+                    Classes="Small"
+                    Content="DevTools"
+                    Click="DevToolsButton_OnClick"/>
+        </Grid>
+        <Panel x:Name="WebViewHost"
+               Grid.Row="1"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch">
+            <TextBlock x:Name="WebViewStatusText"
+                       Text="正在加载浏览器..."
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource SemiColorText2}"
+                       x:CompileBindings="False"/>
+        </Panel>
+    </Grid>
+</UserControl>

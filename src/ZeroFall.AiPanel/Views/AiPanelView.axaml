@@ -1,0 +1,199 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AiPanel.ViewModels"
+             xmlns:views="using:ZeroFall.AiPanel.Views"
+             xmlns:services="using:ZeroFall.AiPanel.Services"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="600"
+             x:Class="ZeroFall.AiPanel.Views.AiPanelView"
+             x:DataType="vm:AiPanelViewModel">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="GeometryDataTemplate" DataType="Geometry" x:CompileBindings="False">
+            <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding}"/>
+        </DataTemplate>
+
+        <ControlTheme x:Key="IconBorderlessButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+
+        <ControlTheme x:Key="IconSolidButton"
+                      BasedOn="{StaticResource SolidButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="MinWidth" Value="28"/>
+            <Setter Property="MinHeight" Value="28"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <Style Selector="TextBox.Multiline">
+            <Setter Property="MinHeight" Value="60"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+        </Style>
+        <Style Selector="ComboBox#ModelComboBox">
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="ClipToBounds" Value="True"/>
+        </Style>
+        <!-- 宽度不足时保留模型名末尾（LeadingCharacterEllipsis：前面 …，后面完整） -->
+        <Style Selector="ComboBox#ModelComboBox /template/ ContentPresenter">
+            <Setter Property="TextTrimming" Value="LeadingCharacterEllipsis"/>
+        </Style>
+        <Style Selector="ComboBox#ModelComboBox /template/ TextBlock">
+            <Setter Property="TextTrimming" Value="LeadingCharacterEllipsis"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="*,Auto">
+        <Grid Grid.Row="0" RowDefinitions="Auto,*">
+            <TextBlock x:Name="ChatStatusText"
+                       Text=""
+                       Margin="8,4,8,4"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource SemiColorText2}"
+                       IsVisible="False"
+                       x:CompileBindings="False"/>
+            <views:AiChatWebView x:Name="ChatWebView"
+                                    Grid.Row="1"
+                                    Margin="8,2,0,0"
+                                    DataContext="{Binding}"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    x:CompileBindings="False"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="8,4,8,6" RowDefinitions="Auto,*">
+            <TextBlock Grid.Row="0"
+                       Text="正在压缩上下文，请稍候…"
+                       Margin="0,0,0,4"
+                       HorizontalAlignment="Center"
+                       FontSize="11"
+                       Foreground="{DynamicResource SemiColorText2}"
+                       IsVisible="{Binding IsCompressingContext}"
+                       x:CompileBindings="False"/>
+            <Grid Grid.Row="1">
+            <TextBox x:Name="InputTextBox"
+                     Text="{Binding InputText}"
+                     AcceptsReturn="True"
+                     Height="100"
+                     MaxHeight="160"
+                     TextWrapping="Wrap"
+                     VerticalAlignment="Stretch"
+                     VerticalContentAlignment="Top"
+                     Padding="8,6,8,34"
+                     PlaceholderText="输入问题或 SQL... (Enter 换行，Ctrl/Shift+Enter 发送)"
+                     IsEnabled="{Binding CanUseInput}"
+                     x:CompileBindings="False"/>
+            <Grid VerticalAlignment="Bottom"
+                  Margin="2,0,2,4"
+                  HorizontalAlignment="Stretch">
+                <Border CornerRadius="6"
+                        Background="{DynamicResource SemiColorBackground0}"
+                        BorderBrush="{DynamicResource SemiColorBorder}"
+                        BorderThickness="1"
+                        Opacity="0.94"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        IsHitTestVisible="True"/>
+                <Grid Margin="6,4"
+                      Background="Transparent"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch">
+                    <DockPanel LastChildFill="True">
+                        <StackPanel DockPanel.Dock="Right"
+                                    Orientation="Horizontal"
+                                    Spacing="6"
+                                    VerticalAlignment="Center">
+                            <Button Width="28"
+                                    Height="28"
+                                    Padding="0"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    VerticalAlignment="Center"
+                                    Classes="Small"
+                                    IsVisible="{Binding IsConfigured}"
+                                    x:CompileBindings="False">
+                                <ProgressBar Width="24"
+                                             Height="24"
+                                             Minimum="0"
+                                             Maximum="100"
+                                             Value="{Binding ContextTokenUsagePercent}"
+                                             Theme="{DynamicResource ProgressRing}"
+                                             ShowProgressText="False"
+                                             IsHitTestVisible="False"/>
+                                <Button.Flyout>
+                                    <Flyout Placement="Top" ShowMode="Transient">
+                                        <Border Padding="10,8" MaxWidth="300">
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="上下文占用"
+                                                           FontWeight="SemiBold"
+                                                           FontSize="12"/>
+                                                <TextBlock Text="{Binding ContextTokenUsageDetails}"
+                                                           TextWrapping="Wrap"
+                                                           FontSize="11"
+                                                           Opacity="0.92"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                            <Button x:Name="SendOrStopButton"
+                                    Command="{Binding SendOrStopCommand}"
+                                    Width="28"
+                                    Height="28"
+                                    Padding="2"
+                                    Classes="Small"
+                                    Theme="{StaticResource SolidButton}"
+                                    ToolTip.Tip="{Binding SendOrStopToolTip}"
+                                    x:CompileBindings="False">
+                                <Panel>
+                                    <PathIcon x:Name="SendIcon"
+                                              Width="14"
+                                              Height="14"
+                                              Theme="{StaticResource InnerPathIcon}"
+                                              IsVisible="{Binding IsNotSending}"/>
+                                    <PathIcon x:Name="StopIcon"
+                                              Width="14"
+                                              Height="14"
+                                              Theme="{StaticResource InnerPathIcon}"
+                                              IsVisible="{Binding IsSending}"/>
+                                </Panel>
+                            </Button>
+                        </StackPanel>
+                        <CheckBox DockPanel.Dock="Left"
+                                  Content="思考"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,6,0"
+                                  IsChecked="{Binding EnableThinking, Mode=TwoWay}"
+                                  IsEnabled="{Binding IsConfigured}"
+                                  ToolTip.Tip="开启后向模型请求思考过程并在回复中展示"
+                                  x:CompileBindings="False"/>
+                        <ComboBox x:Name="ModelComboBox"
+                                  ItemsSource="{Binding AvailableModels}"
+                                  SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                                  IsEnabled="{Binding IsConfigured}"
+                                  MinWidth="48"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,4,0"
+                                  Classes="Small"
+                                  ToolTip.Tip="{Binding SelectedModel}"
+                                  x:CompileBindings="False"/>
+                    </DockPanel>
+                </Grid>
+            </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

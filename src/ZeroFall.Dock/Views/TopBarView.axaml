@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Dock.ViewModels"
+             xmlns:chrome="using:Avalonia.Controls.Chrome"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="32"
+             x:Class="ZeroFall.Dock.Views.TopBarView"
+             x:DataType="vm:TopBarViewModel">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="GeometryDataTemplate" DataType="Geometry" x:CompileBindings="False">
+            <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding}"/>
+        </DataTemplate>
+
+        <ControlTheme x:Key="IconBorderlessToggleSwitch"
+                      BasedOn="{StaticResource ButtonToggleSwitch}"
+                      TargetType="ToggleSwitch">
+            <Setter Property="Width" Value="{DynamicResource SemiHeightControlDefault}"/>
+            <Setter Property="Height" Value="{DynamicResource SemiHeightControlDefault}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+            <Setter Property="OnContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+            <Setter Property="OffContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+
+        <ControlTheme x:Key="IconBorderlessButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Width" Value="{DynamicResource SemiHeightControlDefault}"/>
+            <Setter Property="Height" Value="{DynamicResource SemiHeightControlDefault}"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource GeometryDataTemplate}"/>
+        </ControlTheme>
+    </UserControl.Resources>
+
+    <Grid chrome:WindowDecorationProperties.ElementRole="TitleBar">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Menu x:Name="TopBarMenu" Grid.Column="0" Padding="8,0"
+              VerticalAlignment="Center"
+              chrome:WindowDecorationProperties.ElementRole="DecorationsElement"/>
+
+        <TextBlock Grid.Column="1" Text="{Binding WindowTitle}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   FontSize="12"
+                   TextTrimming="CharacterEllipsis"
+                   MaxWidth="640"
+                   IsHitTestVisible="False"
+                   chrome:WindowDecorationProperties.ElementRole="DecorationsElement"/>
+
+        <StackPanel Grid.Column="2" Orientation="Horizontal"
+                    VerticalAlignment="Center" Margin="0,0,100,0"
+                    chrome:WindowDecorationProperties.ElementRole="DecorationsElement">
+            <ContentControl Content="{Binding ActiveContentToolPanel}"
+                            VerticalAlignment="Center"
+                            IsVisible="{Binding HasActiveContentToolPanel}"/>
+            <Border Width="1"
+                    Height="{DynamicResource SemiHeightControlSmall}"
+                    Margin="6,4"
+                    Background="{DynamicResource SemiColorBorder}"
+                    IsVisible="{Binding HasActiveContentToolPanel}"/>
+            <Button x:Name="BrowserTabButton"
+                    Command="{Binding OpenBrowserTabCommand}"
+                    Theme="{DynamicResource IconBorderlessButton}"
+                    ToolTip.Tip="新建浏览器标签"/>
+            <Button Content="{DynamicResource SemiIconTerminal}"
+                    Command="{Binding ToggleTerminalCommand}"
+                    Theme="{DynamicResource IconBorderlessButton}"
+                    ToolTip.Tip="终端"/>
+            <Button Content="{DynamicResource SemiIconAIStroked}"
+                    Command="{Binding ToggleAiPanelCommand}"
+                    Theme="{DynamicResource IconBorderlessButton}"
+                    ToolTip.Tip="AI"/>
+            <Button Content="{DynamicResource SemiIconSetting}"
+                    Command="{Binding OpenSettingsCommand}"
+                    Theme="{DynamicResource IconBorderlessButton}"
+                    ToolTip.Tip="设置"/>
+            <ToggleSwitch IsChecked="{Binding IsDarkMode}"
+                        OnContent="{DynamicResource SemiIconMoon}"
+                        OffContent="{DynamicResource SemiIconSun}"
+                        Theme="{DynamicResource IconBorderlessToggleSwitch}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

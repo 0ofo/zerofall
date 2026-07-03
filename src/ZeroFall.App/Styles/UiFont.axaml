@@ -1,0 +1,10 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- 全局 UI 字体（等宽区域在各自 View 中单独指定 Consolas） -->
+    <Style Selector="TextElement">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallUiFontFamily}"/>
+    </Style>
+    <Style Selector="DataGrid">
+        <Setter Property="FontFamily" Value="{DynamicResource ZeroFallUiFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource SemiFontSizeRegular}"/>
+    </Style>
+</Styles>

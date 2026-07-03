@@ -1,0 +1,16 @@
+{
+  "name": "zerofall-ai-chat-web",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "vite build && node generate.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "clipboard": "^2.0.11",
+    "vite": "latest",
+    "vite-plugin-singlefile": "latest",
+    "vue": "latest",
+    "vue3-json-viewer": "^2.4.1"
+  }
+}

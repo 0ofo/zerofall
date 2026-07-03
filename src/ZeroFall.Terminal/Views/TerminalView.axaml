@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Terminal.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:term="using:Iciclecreek.Terminal"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="300"
+             x:Class="ZeroFall.Terminal.Views.TerminalView"
+             x:DataType="vm:TerminalViewModel"
+             x:Name="Root">
+    <Grid RowDefinitions="*">
+        <term:TerminalControl Grid.Row="0"
+                              x:Name="Terminal"
+                              Background="{DynamicResource PanelBackgroundBrush}"
+                              Foreground="{DynamicResource SemiColorText0}"
+                              FontFamily="SimHei, SimSun, NSimSun, monospace"
+                              FontSize="13"
+                              ProcessExited="OnTerminalProcessExited"/>
+    </Grid>
+</UserControl>

@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Dock.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="28"
+             x:Class="ZeroFall.Dock.Views.StatusBarView"
+             x:DataType="vm:StatusBarViewModel"
+             Height="{DynamicResource SemiHeightControlSmall}" Padding="8,0">
+
+    <Grid ColumnDefinitions="*,Auto">
+        <TextBlock Grid.Column="0"
+                   Text="{Binding StatusMessage}"
+                   VerticalAlignment="Center"
+                   FontSize="12"
+                   TextTrimming="CharacterEllipsis"/>
+
+        <StackPanel Grid.Column="1"
+                    Orientation="Horizontal"
+                    Spacing="12"
+                    VerticalAlignment="Center">
+            <TextBlock Text="{Binding ConnectionStatus}"
+                       IsVisible="{Binding ConnectionStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       FontSize="12"
+                       Foreground="{DynamicResource SemiColorText2}"/>
+            <TextBlock Text="{Binding ResourceUsageText}"
+                       FontSize="12"
+                       Foreground="{DynamicResource SemiColorText2}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

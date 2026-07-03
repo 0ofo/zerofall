@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             x:Class="ZeroFall.Browser.Views.HttpDecodeView"
+             x:DataType="vm:HttpDecodeTabViewModel">
+    <Grid Margin="8" RowDefinitions="Auto,Auto,*,Auto,*">
+        <TextBlock Grid.Row="0"
+                   Text="{Binding SourceLabel}"
+                   FontSize="12"
+                   Opacity="0.85"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,4"/>
+        <TextBlock Grid.Row="1"
+                   Text="{Binding StatusText}"
+                   FontSize="11"
+                   Opacity="0.7"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,8"/>
+
+        <TextBox Grid.Row="2"
+                 Text="{Binding InputText, Mode=TwoWay}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 PlaceholderText="输入（或从流量导入）"
+                 FontFamily="Consolas,Courier New,monospace"
+                 FontSize="12"
+                 x:CompileBindings="False"/>
+
+        <WrapPanel Grid.Row="3" Margin="0,8" x:CompileBindings="False">
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="智能"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="Smart"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="URL 解码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="UrlDecode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="URL 编码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="UrlEncode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="Base64 解码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="Base64Decode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="Base64 编码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="Base64Encode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="Hex 解码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="HexDecode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="Hex 编码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="HexEncode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="HTML 解码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="HtmlDecode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="Unicode 解码"
+                    Command="{Binding RunDecodeCommand}"
+                    CommandParameter="UnicodeDecode"/>
+            <Button Classes="Small" Margin="0,0,6,6"
+                    Content="输出 → 输入"
+                    Command="{Binding CopyOutputToInputCommand}"/>
+        </WrapPanel>
+
+        <TextBox Grid.Row="4"
+                 Text="{Binding OutputText, Mode=TwoWay}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 PlaceholderText="输出"
+                 FontFamily="Consolas,Courier New,monospace"
+                 FontSize="12"
+                 IsReadOnly="False"
+                 x:CompileBindings="False"/>
+    </Grid>
+</UserControl>

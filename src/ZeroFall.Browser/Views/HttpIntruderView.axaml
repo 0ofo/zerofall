@@ -1,0 +1,78 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             xmlns:views="using:ZeroFall.Browser.Views"
+             x:Class="ZeroFall.Browser.Views.HttpIntruderView"
+             x:DataType="vm:HttpIntruderTabViewModel">
+    <Grid Margin="8" ColumnDefinitions="*,Auto,*">
+        <views:HttpMessagePairView Grid.Column="0"
+                                   x:CompileBindings="False"
+                                   ShowResponse="False"
+                                   RequestIsReadOnly="False"
+                                   RequestText="{Binding RequestText, Mode=TwoWay}"
+                                   ReplayRealHost="{Binding RealHost, Mode=TwoWay}"
+                                   ReplayIsHttps="{Binding IsHttps, Mode=TwoWay}"/>
+
+        <GridSplitter Grid.Column="1"
+                      Width="4"
+                      ShowsPreview="True"
+                      ResizeDirection="Columns"
+                      ResizeBehavior="PreviousAndNext"
+                      Background="{DynamicResource SemiColorBackground0}"/>
+
+        <u:UrsaGroupBox Grid.Column="2"
+                        Header="Payload 设置"
+                        VerticalAlignment="Stretch">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+                <TextBlock Grid.Row="0"
+                           Text="{Binding StatusText}"
+                           FontSize="12"
+                           Opacity="0.85"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,8"/>
+
+                <StackPanel Grid.Row="1" Spacing="8" Margin="0,0,0,12">
+                    <TextBlock Text="攻击类型" FontSize="12" Opacity="0.85"/>
+                    <ComboBox ItemsSource="{Binding AttackTypes}"
+                              SelectedItem="{Binding AttackType, Mode=TwoWay}"
+                              HorizontalAlignment="Stretch"
+                              x:CompileBindings="False"/>
+                </StackPanel>
+
+                <Grid Grid.Row="2"
+                      ColumnDefinitions="*,*"
+                      ColumnSpacing="8"
+                      Margin="0,0,0,12">
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="并发" FontSize="12" Opacity="0.85"/>
+                        <TextBox Text="{Binding MaxConcurrency, Mode=TwoWay}"
+                                 PlaceholderText="10"
+                                 x:CompileBindings="False"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Text="超时 (秒)" FontSize="12" Opacity="0.85"/>
+                        <TextBox Text="{Binding RequestTimeoutSeconds, Mode=TwoWay}"
+                                 PlaceholderText="30"
+                                 x:CompileBindings="False"/>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Grid.Row="3"
+                           Text="Payload 列表（每行一个；请求中用 § 标记位置）"
+                           FontSize="12"
+                           Opacity="0.85"
+                           Margin="0,0,0,4"/>
+
+                <TextBox Grid.Row="4"
+                         Text="{Binding PayloadListText, Mode=TwoWay}"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         FontFamily="Consolas,Courier New,monospace"
+                         FontSize="12"
+                         PlaceholderText="admin&#x0a;password&#x0a;test"
+                         x:CompileBindings="False"/>
+            </Grid>
+        </u:UrsaGroupBox>
+    </Grid>
+</UserControl>

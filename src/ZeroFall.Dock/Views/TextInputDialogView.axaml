@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Dock.ViewModels"
+             x:Class="ZeroFall.Dock.Views.TextInputDialogView"
+             x:DataType="vm:TextInputDialogViewModel"
+             MaxWidth="360">
+    <TextBox x:Name="InputBox"
+             Text="{Binding Text, Mode=TwoWay}"
+             AcceptsReturn="{Binding Multiline}"
+             TextWrapping="Wrap"/>
+</UserControl>

@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AssetRecon.ViewModels"
+             x:Class="ZeroFall.AssetRecon.Views.AssetReconLeftPanelView"
+             x:DataType="vm:AssetReconPanelHostViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- 顶部：情报源 + 查询 + 状态 -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="0,0,0,1"
+                Padding="8,6">
+            <StackPanel Spacing="6">
+                <Grid RowDefinitions="Auto,Auto" RowSpacing="6">
+                    <TextBox x:Name="QueryBox"
+                             Grid.Row="0"
+                             VerticalAlignment="Center"
+                             Text="{Binding Recon.Query}"
+                             FontFamily="Consolas,Courier New,monospace"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalContentAlignment="Center"
+                             HorizontalContentAlignment="Left"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             MinLines="1"
+                             MaxLines="3"/>
+                    <Grid Grid.Row="1" ColumnDefinitions="*,Auto">
+                        <ComboBox Grid.Column="0"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Stretch"
+                                  SelectedIndex="{Binding Recon.SourceModeIndex}"
+                                  IsEnabled="{Binding !Recon.IsQuerying}">
+                            <ComboBoxItem Content="智能聚合"/>
+                            <ComboBoxItem Content="FOFA"/>
+                            <ComboBoxItem Content="Hunter"/>
+                            <ComboBoxItem Content="360 Quake"/>
+                        </ComboBox>
+                        <Button Grid.Column="1"
+                                Margin="6,0,0,0"
+                                VerticalAlignment="Center"
+                                Command="{Binding Recon.QueryCommand}"
+                                IsEnabled="{Binding !Recon.IsQuerying}"
+                                MinWidth="72"
+                                Theme="{DynamicResource SolidButton}">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <PathIcon Data="{DynamicResource SemiIconSearch}" Width="14" Height="14"/>
+                                <TextBlock Text="查询" VerticalAlignment="Center" FontSize="12"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+                </Grid>
+                <TextBlock Text="{Binding Recon.StatusText}"
+                           IsVisible="{Binding Recon.StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           Opacity="0.7"
+                           FontSize="11"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+        </Border>
+
+        <!-- 中间：搜索历史（可滚动） -->
+        <ListBox x:Name="HistoryList"
+                 Grid.Row="1"
+                 ItemsSource="{Binding History.SearchTasks}"
+                 SelectedItem="{Binding History.SelectedTask}"
+                 Margin="0"
+                 Padding="4,2"
+                 x:CompileBindings="False">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="删除" Click="OnDeleteMenuClick"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:CompileBindings="False">
+                    <StackPanel Spacing="2" Margin="0,2">
+                        <TextBlock Text="{Binding Query}"
+                                   TextTrimming="CharacterEllipsis"
+                                   FontSize="12"/>
+                        <TextBlock Text="{Binding DisplaySources}"
+                                   FontSize="10"
+                                   Opacity="0.6"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- 底部：各源额度 -->
+        <Border Grid.Row="2"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderBrush="{DynamicResource SemiColorBorder}"
+                BorderThickness="0,1,0,0"
+                Padding="8,6">
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <TextBlock Grid.Column="0"
+                           Text="{Binding Recon.QuotaColumnFofa}"
+                           FontFamily="Consolas,Courier New,monospace"
+                           FontSize="11"
+                           Opacity="0.9"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding Recon.QuotaColumnHunter}"
+                           FontFamily="Consolas,Courier New,monospace"
+                           FontSize="11"
+                           Opacity="0.9"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="2"
+                           Text="{Binding Recon.QuotaColumnQuake}"
+                           FontFamily="Consolas,Courier New,monospace"
+                           FontSize="11"
+                           Opacity="0.9"
+                           HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

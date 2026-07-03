@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.Settings.GeneralSettingsView"
+             x:DataType="vm:GeneralSettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16">
+            <u:Form LabelPosition="Left"
+                    LabelWidth="120"
+                    LabelAlignment="Right"
+                    HorizontalAlignment="Stretch">
+                <ComboBox SelectedIndex="{Binding ThemeIndex}"
+                          Width="200"
+                          HorizontalAlignment="Left"
+                          u:FormItem.Label="主题">
+                    <ComboBoxItem Content="跟随系统"/>
+                    <ComboBoxItem Content="浅色"/>
+                    <ComboBoxItem Content="深色"/>
+                </ComboBox>
+                <ComboBox SelectedIndex="{Binding LanguageIndex}"
+                          Width="200"
+                          HorizontalAlignment="Left"
+                          u:FormItem.Label="语言">
+                    <ComboBoxItem Content="简体中文"/>
+                    <ComboBoxItem Content="English"/>
+                </ComboBox>
+            </u:Form>
+            <StackPanel Spacing="10" Margin="120,0,0,0">
+                <CheckBox Content="启动时自动打开上次项目"
+                          IsChecked="{Binding AutoOpenLastProject}"/>
+                <CheckBox Content="最小化到系统托盘"
+                          IsChecked="{Binding MinimizeToTray}"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

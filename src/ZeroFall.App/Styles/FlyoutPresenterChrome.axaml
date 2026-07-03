@@ -1,0 +1,46 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- HTTP：Presenter 无内边距，避免可用宽度被主题吃掉后双栏出现外层横向滚动 -->
+    <Style Selector="FlyoutPresenter.TrafficHttpDetailFlyoutPresenter">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="MaxWidth" Value="720"/>
+        <Setter Property="MaxHeight" Value="360"/>
+        <Setter Property="MinWidth" Value="720"/>
+        <Setter Property="MinHeight" Value="360"/>
+    </Style>
+    <!-- Semi 等在 FlyoutPresenter 内再放一层 ScrollViewer；仅关掉这一层滑动条（> 直接关系，不伤 AvaloniaEdit 内层滚动）-->
+    <Style Selector="FlyoutPresenter.TrafficHttpDetailFlyoutPresenter > ScrollViewer">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    <Style Selector="FlyoutPresenter.TrafficHttpDetailFlyoutPresenter > Border > ScrollViewer">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    <!-- 资产侦察：由内容测量决定尺寸，此处仅约束上下限 -->
+    <Style Selector="FlyoutPresenter.AssetReconDetailFlyoutPresenter">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+        <Setter Property="UseLayoutRounding" Value="True"/>
+        <Setter Property="MaxWidth" Value="400"/>
+        <Setter Property="MaxHeight" Value="480"/>
+        <Setter Property="MinWidth" Value="200"/>
+        <Setter Property="MinHeight" Value="48"/>
+    </Style>
+    <Style Selector="FlyoutPresenter.AssetReconDetailFlyoutPresenter > ScrollViewer">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+    <Style Selector="FlyoutPresenter.AssetReconDetailFlyoutPresenter > Border > ScrollViewer">
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+    </Style>
+</Styles>

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="12.0.5" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.1" />
+        <PackageReference Include="Irihi.Ursa" Version="2.0.1" />
+        <PackageReference Include="Semi.Avalonia" Version="12.0.3" />
+        <PackageReference Include="Semi.Avalonia.DataGrid" Version="12.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="11.0.0-preview.5.26302.115" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZeroFall.Base\ZeroFall.Base.csproj" />
+        <ProjectReference Include="..\ZeroFall.DataTable\ZeroFall.DataTable.csproj" />
+        <ProjectReference Include="..\ZeroFall.Platform\ZeroFall.Platform.csproj" />
+        <ProjectReference Include="..\ZeroFall.AiToolGen\ZeroFall.AiToolGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+</Project>

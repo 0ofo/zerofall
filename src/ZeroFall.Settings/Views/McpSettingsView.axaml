@@ -1,0 +1,147 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:vm="using:ZeroFall.Settings.ViewModels"
+             x:Class="ZeroFall.Settings.Views.Settings.McpSettingsView"
+             x:DataType="vm:McpSettingsViewModel"
+             x:CompileBindings="False">
+
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="16">
+            <TextBlock TextWrapping="Wrap"
+                       Opacity="0.85"
+                       Text="配置外部 MCP（Model Context Protocol）服务。保存后 AI 会将已启用服务器的工具与内置工具一并下发；工具名形如 mcp__{服务器Id}__{工具名}。HTTP 传输会使用「代理」页中的出站代理设置。open-websearch 的 HTTP 模式需先在终端运行：npx open-websearch serve，端点填 http://localhost:3000/mcp。"/>
+
+            <CheckBox Content="启用 MCP"
+                      IsChecked="{Binding McpEnabled}"/>
+
+            <Grid ColumnDefinitions="220,*"
+                  RowDefinitions="Auto,*"
+                  MinHeight="280">
+                <StackPanel Grid.Column="0"
+                            Grid.RowSpan="2"
+                            Spacing="8"
+                            Margin="0,0,12,0">
+                    <TextBlock Text="服务器列表"
+                               FontWeight="SemiBold"/>
+                    <ListBox ItemsSource="{Binding Servers}"
+                             SelectedItem="{Binding SelectedServer}"
+                             MinHeight="200">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:McpServerEntryViewModel"
+                                          x:CompileBindings="False">
+                                <TextBlock Text="{Binding ListTitle}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8">
+                        <Button Content="添加 Open WebSearch"
+                                Command="{Binding AddOpenWebSearchServerCommand}"
+                                Classes="Small"/>
+                        <Button Content="添加"
+                                Command="{Binding AddServerCommand}"
+                                Classes="Small"/>
+                        <Button Content="删除"
+                                Command="{Binding RemoveSelectedServerCommand}"
+                                Classes="Small"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Grid.Column="1"
+                           Grid.Row="0"
+                           Text="服务器详情"
+                           FontWeight="SemiBold"
+                           Margin="0,0,0,8"/>
+
+                <Border Grid.Column="1"
+                        Grid.Row="1"
+                        Padding="12"
+                        CornerRadius="4"
+                        BorderBrush="{DynamicResource SemiColorBorder}"
+                        BorderThickness="1"
+                        IsVisible="{Binding SelectedServer, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <u:Form LabelPosition="Left"
+                            LabelWidth="120"
+                            LabelAlignment="Right"
+                            DataContext="{Binding SelectedServer}"
+                            HorizontalAlignment="Stretch">
+                        <CheckBox IsChecked="{Binding Enabled}"
+                                  u:FormItem.Label="启用"/>
+                        <TextBox Text="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="唯一标识，如 filesystem"
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="服务器 Id"/>
+                        <CheckBox IsChecked="{Binding UseHttp}"
+                                  u:FormItem.Label="HTTP 传输"/>
+                        <TextBox Text="{Binding StdioCommand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="例如 npx 或 C:\path\to\server.exe"
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="stdio 命令"/>
+                        <TextBox Text="{Binding StdioArgs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="-y @modelcontextprotocol/server-filesystem C:\data"
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="stdio 参数"/>
+                        <TextBox Text="{Binding HttpEndpoint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="https://host/..."
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="HTTP 端点"/>
+                        <TextBox Text="{Binding WorkingDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="stdio 进程工作目录，可留空"
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="工作目录"/>
+                        <TextBox Text="{Binding StdioEnv, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 PlaceholderText="MODE=stdio&#10;DEFAULT_SEARCH_ENGINE=duckduckgo"
+                                 AcceptsReturn="True"
+                                 MinHeight="72"
+                                 HorizontalAlignment="Stretch"
+                                 u:FormItem.Label="环境变量"/>
+                    </u:Form>
+                </Border>
+
+                <TextBlock Grid.Column="1"
+                           Grid.Row="1"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           Opacity="0.6"
+                           Text="请添加或选择一个 MCP 服务器"
+                           IsVisible="{Binding SelectedServer, Converter={x:Static ObjectConverters.IsNull}}"/>
+            </Grid>
+
+            <Border CornerRadius="4"
+                    Padding="8,6"
+                    IsVisible="{Binding HasError}"
+                    Background="{DynamicResource SemiColorDangerLight}">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="{DynamicResource SemiColorDanger}"
+                           TextWrapping="Wrap"
+                           FontSize="12"/>
+            </Border>
+
+            <Border CornerRadius="4"
+                    Padding="8,6"
+                    IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Background="{DynamicResource SemiColorSuccessLight}">
+                <TextBlock Text="{Binding StatusMessage}"
+                           TextWrapping="Wrap"
+                           FontSize="12"
+                           Foreground="{DynamicResource SemiColorSuccess}"/>
+            </Border>
+
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="8">
+                <Button Content="测试选中服务器"
+                        Click="OnTestClick"
+                        IsEnabled="{Binding !IsTesting}"
+                        Classes="Small"/>
+                <Button Content="保存"
+                        Click="OnSaveClick"
+                        Command="{Binding SaveCommand}"
+                        Classes="Small"
+                        Theme="{DynamicResource SolidButton}"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

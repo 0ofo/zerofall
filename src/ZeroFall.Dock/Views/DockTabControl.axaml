@@ -1,0 +1,203 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Dock.ViewModels"
+             xmlns:reg="using:ZeroFall.Platform.Registries"
+             xmlns:cc="using:ZeroFall.Dock.Controls"
+             xmlns:views="using:ZeroFall.Dock.Views"
+             x:Class="ZeroFall.Dock.Views.DockTabControl"
+             x:Name="Root">
+
+    <UserControl.Resources>
+        <ControlTheme x:Key="TabCloseButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText2}"/>
+        </ControlTheme>
+
+        <ControlTheme x:Key="PanelCloseButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText2}"/>
+        </ControlTheme>
+
+        <ControlTheme x:Key="SidebarIconListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsPresenter x:Name="PART_ItemsPresenter"
+                                        Margin="0"/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+
+        <ControlTheme x:Key="SidebarIconListBoxItem" TargetType="ListBoxItem">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2,0,0,0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText2}"/>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="{DynamicResource SemiColorFill0}"/>
+            </Style>
+            <Style Selector="^:selected">
+                <Setter Property="Background" Value="{DynamicResource SemiColorFill1}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource SemiColorPrimary}"/>
+                <Setter Property="Foreground" Value="{DynamicResource SemiColorPrimary}"/>
+            </Style>
+            <Style Selector="^:selected:pointerover">
+                <Setter Property="Background" Value="{DynamicResource SemiColorFill1}"/>
+            </Style>
+        </ControlTheme>
+
+        <DataTemplate x:Key="DockTabHeaderTemplate" x:CompileBindings="False">
+            <StackPanel Orientation="Horizontal" Spacing="4"
+                        VerticalAlignment="Center">
+                <Image Source="{Binding FaviconImage}"
+                       Width="14" Height="14"
+                       VerticalAlignment="Center"
+                       IsVisible="{Binding FaviconImage, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                <PathIcon Data="{Binding Icon}" Width="14" Height="14"
+                          VerticalAlignment="Center"
+                          IsVisible="{Binding FaviconImage, Converter={x:Static ObjectConverters.IsNull}}"/>
+                <TextBlock Text="{Binding Title}"
+                           MaxWidth="120"
+                           TextTrimming="CharacterEllipsis"
+                           FontSize="12"
+                           VerticalAlignment="Center"/>
+                <Button Classes="DockTabClose"
+                        VerticalAlignment="Center"
+                        Command="{Binding Panel.CloseTabCommand, RelativeSource={RelativeSource AncestorType=views:DockTabControl}}"
+                        CommandParameter="{Binding}"
+                        IsVisible="{Binding IsClosable}"
+                        Theme="{StaticResource TabCloseButton}">
+                    <PathIcon Data="{DynamicResource SemiIconClose}" Width="12" Height="12"/>
+                </Button>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DockTabContentTemplate" x:CompileBindings="False">
+            <ContentPresenter Content="{Binding Content}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"/>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid">
+        <Border x:Name="StandardLayout"
+                Theme="{StaticResource CardBorder}"
+                Classes="Hover" Margin="0"  Padding="2"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderThickness="2"
+                BorderBrush="{DynamicResource SemiColorText3}">
+            <Grid>
+            <cc:PersistTabControl x:Name="PART_PersistTabControl"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        TabHeaderTemplate="{StaticResource DockTabHeaderTemplate}"
+                        PersistContentTemplate="{StaticResource DockTabContentTemplate}"/>
+            </Grid>
+        </Border>
+
+        <Border x:Name="SidebarLayout" IsVisible="False"
+                Background="{DynamicResource SemiColorBackground0}"
+                BorderThickness="0">
+            <Grid ColumnDefinitions="Auto,*">
+                <Border x:Name="IconStripBorder"
+                        Background="{DynamicResource SemiColorBackground0}"
+                        Width="40"
+                        BorderThickness="0,0,1,0"
+                        BorderBrush="{DynamicResource SemiColorBorder}">
+                    <Grid RowDefinitions="*,Auto">
+                        <ListBox x:Name="PART_IconStrip" Grid.Row="0"
+                                 ItemsSource="{Binding Panel.Tabs, ElementName=Root}"
+                                 SelectedItem="{Binding Panel.SelectedTab, ElementName=Root, Mode=TwoWay}"
+                                 Theme="{StaticResource SidebarIconListBox}">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Theme" Value="{StaticResource SidebarIconListBoxItem}"/>
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:CompileBindings="False">
+                                    <PathIcon Data="{Binding Icon}" Width="18" Height="18"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button x:Name="SidebarSettingsButton" Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,4,0,8"
+                                Command="{Binding OpenSettingsCommand, ElementName=Root}"
+                                Theme="{StaticResource PanelCloseButton}">
+                            <PathIcon Data="{DynamicResource SemiIconSetting}" Width="18" Height="18"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1" Margin="0"
+                        Background="{DynamicResource SemiColorBackground0}"
+                        BorderBrush="{DynamicResource SemiColorText3}"
+                        BorderThickness="2"
+                        CornerRadius="6">
+                    <Grid RowDefinitions="Auto,*" x:Name="SidebarContentArea">
+                        <Border x:Name="SidebarHeaderBar"
+                                BorderThickness="0,0,0,1"
+                                BorderBrush="{DynamicResource SemiColorBorder}"
+                                Padding="0,0,4,0"
+                                CornerRadius="6,6,0,0">
+                            <DockPanel Height="{DynamicResource SemiHeightControlSmall}">
+                                <Button DockPanel.Dock="Right"
+                                        x:Name="SidebarCloseButton"
+                                        VerticalAlignment="Center"
+                                        IsVisible="{Binding ShowCloseButton, ElementName=Root}"
+                                        Theme="{StaticResource PanelCloseButton}">
+                                    <PathIcon Data="{DynamicResource SemiIconClose}" Width="12" Height="12"/>
+                                </Button>
+                                <StackPanel x:Name="SidebarToolPanelHost"
+                                            DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            Spacing="4"
+                                            Margin="0,0,4,0"
+                                            VerticalAlignment="Center"/>
+                                <TextBlock x:Name="SidebarTitle"
+                                           VerticalAlignment="Center"
+                                           FontSize="12"
+                                           Margin="8,0,0,0"
+                                           Foreground="{DynamicResource SemiColorText1}"/>
+                            </DockPanel>
+                        </Border>
+
+                        <cc:PersistTabControl x:Name="PART_SidebarPersistTabControl"
+                                              Grid.Row="1"
+                                              IsTabStripVisible="False"
+                                              TabHeaderTemplate="{StaticResource DockTabHeaderTemplate}"
+                                              PersistContentTemplate="{StaticResource DockTabContentTemplate}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

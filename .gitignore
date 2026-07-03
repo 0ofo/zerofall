@@ -1,0 +1,10 @@
+[Bb]in/
+[Oo]bj/
+**/publish/
+node_modules/
+*.user
+*.suo
+.vs/
+*.WebView2/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             x:Class="ZeroFall.Browser.Views.TrafficMonitorView"
+             x:Name="Root"
+             x:DataType="vm:TrafficMonitorTabViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch">
+    <UserControl.Resources>
+        <ControlTheme x:Key="IconBorderlessButton"
+                      BasedOn="{StaticResource BorderlessButton}"
+                      TargetType="Button">
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Foreground" Value="{DynamicResource SemiColorText1}"/>
+        </ControlTheme>
+
+        <ContextMenu x:Key="TrafficGridContextMenu"
+                     x:CompileBindings="False"
+                     Opening="TrafficGrid_ContextMenuOpening">
+            <MenuItem Header="复制 URL"
+                      Classes="Small"
+                      Click="TrafficGridMenu_CopyUrl"/>
+            <MenuItem Header="发送到 HTTP 重放"
+                      Classes="Small"
+                      Click="TrafficGridMenu_SendReplay"/>
+            <MenuItem Header="发送到 Intruder"
+                      Classes="Small"
+                      Click="TrafficGridMenu_SendIntruder"/>
+            <MenuItem Header="发送到 Decoder" Classes="Small">
+                <MenuItem Header="请求" Classes="Small" Click="TrafficGridMenu_SendDecodeRequest"/>
+                <MenuItem Header="响应" Classes="Small" Click="TrafficGridMenu_SendDecodeResponse"/>
+                <MenuItem Header="请求体" Classes="Small" Click="TrafficGridMenu_SendDecodeRequestBody"/>
+                <MenuItem Header="响应体" Classes="Small" Click="TrafficGridMenu_SendDecodeResponseBody"/>
+            </MenuItem>
+            <MenuItem Header="发送到 Comparer" Classes="Small">
+                <MenuItem Header="请求 vs 响应" Classes="Small" Click="TrafficGridMenu_SendDiffRequestResponse"/>
+                <MenuItem Header="与上一条响应对比" Classes="Small" Click="TrafficGridMenu_SendDiffPreviousResponse"/>
+            </MenuItem>
+            <MenuItem Header="在浏览器中打开 URL"
+                      Classes="Small"
+                      Click="TrafficGridMenu_OpenUrl"/>
+            <MenuItem Header="复制单元格文本"
+                      Classes="Small"
+                      Click="TrafficGridMenu_CopyCell"/>
+            <Separator/>
+            <MenuItem Header="高亮颜色"
+                      Classes="Small"/>
+            <MenuItem Header="清除高亮"
+                      Classes="Small"
+                      Click="TrafficGridMenu_ClearHighlight"/>
+            <MenuItem Header="编辑备注…"
+                      Classes="Small"
+                      Click="TrafficGridMenu_EditRemark"/>
+            <Separator/>
+            <MenuItem Header="端口扫描（此请求主机）"
+                      Classes="Small"
+                      Click="TrafficGridMenu_PortScan"/>
+            <Separator/>
+            <MenuItem Header="清除所有记录"
+                      Classes="Small"
+                      Click="TrafficGridMenu_ClearAll"/>
+        </ContextMenu>
+    </UserControl.Resources>
+
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        <DataGrid x:Name="TrafficDiagGrid"
+                  x:CompileBindings="False"
+                  DataContext="{Binding Table}"
+                  ItemsSource="{Binding Rows}"
+                  ContextMenu="{StaticResource TrafficGridContextMenu}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  MinHeight="48"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  SelectionMode="Extended"
+                  GridLinesVisibility="Horizontal"/>
+    </Grid>
+</UserControl>

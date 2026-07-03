@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <NoWarn>$(NoWarn);MSB3277</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="12.0.5" />
+        <PackageReference Include="Avalonia.Controls.WebView" Version="12.0.1" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.1" />
+        <PackageReference Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
+        <PackageReference Include="AvaloniaHex" Version="0.1.13" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4022.49" />
+        <PackageReference Include="Irihi.Ursa" Version="2.0.1" />
+        <PackageReference Include="Semi.Avalonia" Version="12.0.3" />
+        <PackageReference Include="Semi.Avalonia.DataGrid" Version="12.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZeroFall.Base\ZeroFall.Base.csproj" />
+        <ProjectReference Include="..\ZeroFall.HtmlToMarkdown\ZeroFall.HtmlToMarkdown.csproj" />
+        <ProjectReference Include="..\ZeroFall.DataTable\ZeroFall.DataTable.csproj" />
+        <ProjectReference Include="..\ZeroFall.Platform\ZeroFall.Platform.csproj" />
+        <ProjectReference Include="..\ZeroFall.Traffic\ZeroFall.Traffic.csproj" />
+        <ProjectReference Include="..\ZeroFall.Dock\ZeroFall.Dock.csproj" />
+        <ProjectReference Include="..\ZeroFall.Fingerprint\ZeroFall.Fingerprint.csproj" />
+        <ProjectReference Include="..\ZeroFall.AiToolGen\ZeroFall.AiToolGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\fingerprints\**\*" Link="fingerprints\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+        <Content Include="..\..\fingers\resources\aliases.yaml" Link="aliases.yaml" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+</Project>

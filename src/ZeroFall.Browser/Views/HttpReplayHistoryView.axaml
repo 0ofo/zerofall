@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Browser.ViewModels"
+             x:Class="ZeroFall.Browser.Views.HttpReplayHistoryView"
+             x:DataType="vm:HttpReplayTabViewModel">
+    <Grid RowDefinitions="*">
+        <ListBox Grid.Row="0"
+                 ItemsSource="{Binding Items}"
+                 SelectedItem="{Binding SelectedItem}">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:HttpReplayItemViewModel" x:CompileBindings="False">
+                    <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8" Margin="6,4">
+                        <TextBlock Grid.Column="0" Text="{Binding Time}" FontSize="11" Opacity="0.75"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Method}" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="2" Text="{Binding OriginalUrl}" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Grid.Column="3" Text="{Binding Status}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

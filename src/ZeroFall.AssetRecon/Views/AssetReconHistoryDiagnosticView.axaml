@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.DataTable.ViewModels"
+             xmlns:dt="using:ZeroFall.DataTable.Views"
+             x:Class="ZeroFall.AssetRecon.Views.AssetReconHistoryDiagnosticView"
+             x:DataType="vm:DataTableViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Padding="0">
+
+    <Grid RowDefinitions="Auto,*"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+        <dt:DataTablePagerView Grid.Row="0" Margin="6,4,6,2"/>
+        <DataGrid x:Name="HistoryDiagGrid"
+                  Grid.Row="1"
+                  x:CompileBindings="False"
+                  ItemsSource="{Binding Rows}"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  MinHeight="48"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserSortColumns="True"
+                  CanUserReorderColumns="True"
+                  CanUserResizeColumns="True"
+                  SelectionMode="Extended"
+                  GridLinesVisibility="Horizontal"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}"/>
+    </Grid>
+</UserControl>

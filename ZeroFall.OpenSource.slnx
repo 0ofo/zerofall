@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ZeroFall.AiPanel/ZeroFall.AiPanel.csproj" />
+    <Project Path="src/ZeroFall.AiToolGen/ZeroFall.AiToolGen.csproj" />
+    <Project Path="src/ZeroFall.App/ZeroFall.App.csproj" />
+    <Project Path="src/ZeroFall.AssetRecon/ZeroFall.AssetRecon.csproj" />
+    <Project Path="src/ZeroFall.Base/ZeroFall.Base.csproj" />
+    <Project Path="src/ZeroFall.Browser/ZeroFall.Browser.csproj" />
+    <Project Path="src/ZeroFall.DataTable/ZeroFall.DataTable.csproj" />
+    <Project Path="src/ZeroFall.Dock/ZeroFall.Dock.csproj" />
+    <Project Path="src/ZeroFall.Fingerprint/ZeroFall.Fingerprint.csproj" />
+    <Project Path="src/ZeroFall.HtmlToMarkdown/ZeroFall.HtmlToMarkdown.csproj" />
+    <Project Path="src/ZeroFall.Platform/ZeroFall.Platform.csproj" />
+    <Project Path="src/ZeroFall.Settings/ZeroFall.Settings.csproj" />
+    <Project Path="src/ZeroFall.Sidebar/ZeroFall.Sidebar.csproj" />
+    <Project Path="src/ZeroFall.SqlEditor/ZeroFall.SqlEditor.csproj" />
+    <Project Path="src/ZeroFall.Terminal/ZeroFall.Terminal.csproj" />
+    <Project Path="src/ZeroFall.Traffic/ZeroFall.Traffic.csproj" />
+  </Folder>
+</Solution>

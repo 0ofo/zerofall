@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ZeroFall.Settings.Views.Settings.AboutSettingsView"
+             x:DataType="x:Object">
+
+    <StackPanel Spacing="16" Margin="20">
+        <StackPanel Spacing="8" HorizontalAlignment="Center" Margin="0,24">
+            <PathIcon Data="{DynamicResource SemiIconSearch}"
+                      Width="48" Height="48"
+                      Foreground="{DynamicResource SemiColorPrimary}"/>
+            <TextBlock Text="ZeroFall"
+                       FontSize="20"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"/>
+            <TextBlock Text="版本 1.0.0"
+                       Opacity="0.6"
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <TextBlock Text="多源数据查询与AI辅助分析工具"
+                   HorizontalAlignment="Center"
+                   Opacity="0.8"/>
+
+        <TextBlock Text="© 2024 ZeroFall Team"
+                   HorizontalAlignment="Center"
+                   Opacity="0.5"
+                   FontSize="12"/>
+    </StackPanel>
+</UserControl>

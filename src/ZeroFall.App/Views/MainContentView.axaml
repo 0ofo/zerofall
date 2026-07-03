@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.App.ViewModels"
+             xmlns:dock="using:ZeroFall.Dock.Views"
+             xmlns:views="using:ZeroFall.App.Views"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="ZeroFall.App.Views.MainContentView"
+             x:DataType="vm:MainWindowViewModel">
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top">
+            <dock:TopBarView DataContext="{Binding DockLayout.TopBar}"/>
+        </Border>
+
+        <Border DockPanel.Dock="Bottom">
+            <dock:StatusBarView DataContext="{Binding DockLayout.StatusBar}"/>
+        </Border>
+
+        <Grid>
+            <Grid x:Name="MainGrid" Margin="0 0 4 0" IsVisible="{Binding ShowWorkspaceChrome}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320" MinWidth="160"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" MinWidth="240"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="320" MinWidth="160"/>
+            </Grid.ColumnDefinitions>
+
+            <dock:DockTabControl x:Name="LeftDockTab" Grid.Column="0"
+                              Panel="{Binding DockLayout.LeftPanel}"
+                              SidebarMode="True"
+                              ShowCloseButton="True"
+                              OpenSettingsCommand="{Binding DockLayout.TopBar.OpenSettingsCommand}"
+                              Background="{DynamicResource PanelBackgroundBrush}"/>
+
+            <GridSplitter Grid.Column="1" x:Name="LeftSplitter"
+                          Background="{DynamicResource SemiColorBackground0}"
+                          ShowsPreview="True"/>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" MinHeight="120"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" MinHeight="100"/>
+                </Grid.RowDefinitions>
+
+                <dock:DockTabControl Grid.Row="0"
+                                  TopBar="{Binding DockLayout.TopBar}"
+                                  Panel="{Binding DockLayout.ContentPanel}"
+                                  Background="{DynamicResource PanelBackgroundBrush}"/>
+
+                <GridSplitter Grid.Row="1" x:Name="BottomSplitter"
+                              Background="{DynamicResource SemiColorBackground0}"
+                              ShowsPreview="True"/>
+
+                <dock:DockTabControl Grid.Row="2"
+                                  Panel="{Binding DockLayout.BottomPanel}"
+                                  ShowCloseButton="True"
+                                  Background="{DynamicResource PanelBackgroundBrush}"/>
+            </Grid>
+
+            <GridSplitter x:Name="RightSplitter" Grid.Column="3"
+                          Background="{DynamicResource SemiColorBackground0}"
+                          ShowsPreview="True"/>
+
+            <dock:DockTabControl Grid.Column="4"
+                              Panel="{Binding DockLayout.RightPanel}"
+                              ShowCloseButton="True"
+                              Background="{DynamicResource PanelBackgroundBrush}"/>
+            </Grid>
+
+            <Panel IsVisible="{Binding !ShowWorkspaceChrome}">
+                <views:WorkspaceHomeView DataContext="{Binding Home}"/>
+            </Panel>
+        </Grid>
+    </DockPanel>
+</UserControl>

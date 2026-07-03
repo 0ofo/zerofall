@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.DataTable.ViewModels"
+             x:Class="ZeroFall.SqlEditor.Views.SqliteDataTableDiagnosticView"
+             x:DataType="vm:DataTableViewModel"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             Padding="0">
+
+    <DataGrid x:Name="SqliteDiagGrid"
+              x:CompileBindings="False"
+              ItemsSource="{Binding Rows}"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              MinHeight="48"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              CanUserSortColumns="True"
+              CanUserReorderColumns="True"
+              CanUserResizeColumns="True"
+              SelectionMode="Extended"
+              GridLinesVisibility="Horizontal"
+              SelectedItem="{Binding SelectedRow, Mode=TwoWay}"/>
+</UserControl>

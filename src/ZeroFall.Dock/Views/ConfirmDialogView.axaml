@@ -1,0 +1,9 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.Dock.ViewModels"
+             x:Class="ZeroFall.Dock.Views.ConfirmDialogView"
+             x:DataType="vm:ConfirmDialogViewModel"
+             MaxWidth="360">
+    <TextBlock Text="{Binding Message}"
+               TextWrapping="Wrap"/>
+</UserControl>

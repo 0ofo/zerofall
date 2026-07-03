@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ZeroFall.AiPanel.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="360" d:DesignHeight="300"
+             x:Class="ZeroFall.AiPanel.Views.AskDialogView"
+             x:DataType="vm:AskDialogViewModel"
+             MaxWidth="360">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto" x:CompileBindings="False">
+        <TextBlock Grid.Row="0"
+                   Text="{Binding Question}"
+                   TextWrapping="Wrap"
+                   FontSize="14"
+                   Margin="0,0,0,16"/>
+
+        <StackPanel Grid.Row="1" Spacing="8">
+            <ItemsControl IsVisible="{Binding !IsMultiSelect}"
+                          ItemsSource="{Binding Options}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:CompileBindings="False">
+                        <Button Content="{Binding Label}"
+                                Classes="Small"
+                                Margin="0,2"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Command="{Binding SelectCommand}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <ItemsControl IsVisible="{Binding IsMultiSelect}"
+                          ItemsSource="{Binding Options}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:CompileBindings="False">
+                        <CheckBox Content="{Binding Label}"
+                                  IsChecked="{Binding IsChecked}"
+                                  Margin="0,4"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <TextBox Grid.Row="2"
+                 Text="{Binding SupplementaryInput}"
+                 PlaceholderText="补充说明（可选）"
+                 Margin="0,12,0,0"/>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Content="提交"
+                    Classes="Small"
+                    Theme="{DynamicResource SolidButton}"
+                    IsVisible="{Binding IsMultiSelect}"
+                    Command="{Binding SubmitCommand}"/>
+            <Button Content="取消"
+                    Classes="Small"
+                    Command="{Binding CancelCommand}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

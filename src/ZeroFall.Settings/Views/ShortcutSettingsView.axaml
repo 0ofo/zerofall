@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:u="https://irihi.tech/ursa"
+             x:Class="ZeroFall.Settings.Views.Settings.ShortcutSettingsView"
+             x:DataType="x:Object">
+
+    <ScrollViewer>
+        <u:Form Margin="20"
+                LabelPosition="Left"
+                LabelWidth="120"
+                LabelAlignment="Right"
+                HorizontalAlignment="Stretch">
+            <TextBox Text="Ctrl+N"
+                     IsReadOnly="True"
+                     Width="120"
+                     HorizontalAlignment="Left"
+                     u:FormItem.Label="新建查询"/>
+            <TextBox Text="Ctrl+S"
+                     IsReadOnly="True"
+                     Width="120"
+                     HorizontalAlignment="Left"
+                     u:FormItem.Label="保存"/>
+            <TextBox Text="F5"
+                     IsReadOnly="True"
+                     Width="120"
+                     HorizontalAlignment="Left"
+                     u:FormItem.Label="运行查询"/>
+            <TextBox Text="Ctrl+,"
+                     IsReadOnly="True"
+                     Width="120"
+                     HorizontalAlignment="Left"
+                     u:FormItem.Label="打开设置"/>
+        </u:Form>
+    </ScrollViewer>
+</UserControl>
