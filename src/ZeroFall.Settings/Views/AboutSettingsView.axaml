@@ -21,7 +21,7 @@
                    HorizontalAlignment="Center"
                    Opacity="0.8"/>
 
-        <TextBlock Text="© 2024 ZeroFall Team"
+        <TextBlock Text="© 2026 ZeroFall Team"
                    HorizontalAlignment="Center"
                    Opacity="0.5"
                    FontSize="12"/>
