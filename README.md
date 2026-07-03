@@ -6,6 +6,18 @@
 
 ---
 
+## 界面预览
+
+**主界面** — 五区域 Dock 布局：资源树、浏览器、终端/流量、AI 面板一屏协作。
+
+![主界面](img/main-ui.png)
+
+**浏览器与 AI 协作** — 网站树、流量监控、HTTP 检视与 AI 分析同一工作流（类 Burp Suite + 助手）。
+
+![浏览器与 AI 协作](img/browser-ai.png)
+
+---
+
 ## 为什么用 烬
 
 - **类 Burp Suite**：内置浏览器 + 本地拦截代理，HTTP(S) 流量全量入库；支持检视、重放、Intruder、Decoder/Diff 等 HTTP 工作流，网站树按会话组织请求。
